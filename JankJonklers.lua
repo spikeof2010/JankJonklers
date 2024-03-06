@@ -156,6 +156,23 @@ function SMODS.INIT.MultiJokersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_shady_dealer", {
+        unlocked = true,
+        discovered = true,
+        rarity = 3,
+        cost = 8,
+        name = "Shady Dealer",
+        set = "Joker",
+        config = {
+        },
+    }, {
+        name = "Shady Dealer",
+        text = {
+            "Sell this card to create a",
+            "free {C:attention}Negative Tag{}"
+        }
+    });
+
     add_item(MOD_ID, "Joker", "j_suspicious_vase", {
         unlocked = true,
         discovered = true,
@@ -215,15 +232,13 @@ function Card:calculate_joker(context)
                     } 
                 end
                 if self.ability.name == "Highlander Joker" and context.scoring_name == "High Card" and not context.blueprint then
-                    for k, v in ipairs(context.scoring_hand) do
-                        v.ability.perma_bonus = v.ability.perma_bonus or 0
-                        v.ability.perma_bonus = v.ability.perma_bonus + self.ability.extra
-                        return {
-                            extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
-                            colour = G.C.CHIPS,
-                            card = self
-                        }
-                    end
+                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra
+                    return {
+                        extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
+                        colour = G.C.CHIPS,
+                        card = self
+                    }
                 end
                 if self.ability.name == "Lieutenant Joker" and context.scoring_name == "High Card" then
                     for k, v in ipairs(context.full_hand) do
@@ -258,6 +273,17 @@ function Card:calculate_joker(context)
                         Xmult_mod = self.ability.extra.x_mult
                     }
                 end
+            end
+        elseif context.selling_self then
+            if self.ability.name == 'Shady Dealer' then
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        add_tag(Tag('tag_negative'))
+                        play_sound('generic1', 0.6 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.1 + math.random()*0.1, 0.4)
+                        return true
+                    end)
+                }))
             end
         end
     end
