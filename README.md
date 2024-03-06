@@ -1,7 +1,7 @@
 Requires Steamodded!
 https://github.com/Steamopollys/Steamodded
 
-Featuring 5 Jo(n)k(l)ers so far:
+Featuring 6 Jo(n)k(l)ers so far:
 
 Devilish Joker
 Uncommon
@@ -22,3 +22,7 @@ After you play a High Card, increase the rank of each card played
 Suspicious Vase
 Uncommon
 All 2s and 3s become Glass Cards when played
+
+Shady Dealer
+Rare
+Sell this card to get a Negative Tag
