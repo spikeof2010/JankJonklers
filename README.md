@@ -21,8 +21,12 @@ After you play a High Card, increase the rank of each card played
 
 Suspicious Vase
 Uncommon
-All 2s and 3s become Glass Cards when played
+All 2s, 3s, and 4s become Glass Cards when played
 
 Shady Dealer
 Rare
 Sell this card to get a Negative Tag
+
+Devoted Joker
+Rare
+After a Boss Blind is selected, gain x0.5 Mult and set your money to $0
