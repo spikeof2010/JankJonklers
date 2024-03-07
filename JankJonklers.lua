@@ -81,7 +81,7 @@ function refresh_items()
     end
 end
 
-function SMODS.INIT.MultiJokersMod()
+function SMODS.INIT.JankJonklersMod()
     add_item(MOD_ID, "Joker", "j_devilish", {
         unlocked = true,
         discovered = true,
@@ -97,7 +97,7 @@ function SMODS.INIT.MultiJokersMod()
         text = {
             "{X:mult,C:white}x3{} Mult if played",
             "hand contains only {C:attention}6s{}",
-            "or {C:attention}Gold Cards{}."
+            "or {C:attention}Gold Cards{}"
         }
     });
 
@@ -138,7 +138,7 @@ function SMODS.INIT.MultiJokersMod()
         name = "Old Man Joker",
         text = {
             "When {C:attention}Boss Blind{} is selected",
-            "create a free {C:attention}Ethereal Tag{},"
+            "create a free {C:attention}Ethereal Tag{}"
         }
     });
 
