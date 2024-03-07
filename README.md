@@ -1,7 +1,7 @@
 Requires Steamodded!
 https://github.com/Steamopollys/Steamodded
 
-Featuring 7 Jo(n)k(l)ers so far:
+Featuring 9 Jo(n)k(l)ers so far:
 
 
 
