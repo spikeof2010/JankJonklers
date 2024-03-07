@@ -101,6 +101,28 @@ function SMODS.INIT.MultiJokersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_devoted", {
+        unlocked = true,
+        discovered = true,
+        rarity = 3,
+        cost = 8,
+        name = "Devoted Joker",
+        set = "Joker",
+        config = {
+            extra = {
+                x_mult = 1
+            },
+        },
+    }, {
+        name = "Devoted Joker",
+        text = {
+            "When {C:attention}Boss Blind{} is selected",
+            "gain {X:mult,C:white}x0.5{} Mult, then",
+            "set your {C:attention}money{} to {C:attention}$0{}",
+            "{C:inactive}(Currently {X:mult,C:white}x#1#{C:inactive})"
+        }
+    });
+
     add_item(MOD_ID, "Joker", "j_expanded_art", {
         unlocked = true,
         discovered = true,
@@ -168,8 +190,8 @@ function SMODS.INIT.MultiJokersMod()
     }, {
         name = "Shady Dealer",
         text = {
-            "Sell this card to create a",
-            "free {C:attention}Negative Tag{}"
+            "Sell this card to create",
+            "a free {C:attention}Negative Tag{}"
         }
     });
 
@@ -186,7 +208,7 @@ function SMODS.INIT.MultiJokersMod()
     }, {
         name = "Suspicious Vase",
         text = {
-            "All {C:attention}2s{} and {C:attention}3s{}",
+            "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
             "become {C:attention}Glass Cards{}",
             "when played."
         }
@@ -215,7 +237,7 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-                if self.ability.name == 'Suspicious Vase' and (context.other_card:get_id() == 2 or context.other_card:get_id() == 3) then
+                if self.ability.name == 'Suspicious Vase' and (context.other_card:get_id() == 2 or context.other_card:get_id() == 3) or context.other_card:get_id() == 4) then
                     if context.other_card.ability.name == 'Glass Card' then
                         return nil
                     end
@@ -273,6 +295,25 @@ function Card:calculate_joker(context)
                         Xmult_mod = self.ability.extra.x_mult
                     }
                 end
+                if self.ability.name == "Devoted Joker" then
+                    if self.ability.extra.x_mult > 1 then
+                        return {
+                            message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.x_mult } },
+                            Xmult_mod = self.ability.extra.x_mult
+                        }
+                    end
+                    return nil
+                end
+            end
+        elseif context.setting_blind and not self.getting_sliced then
+            if self.ability.name == 'Devoted Joker' and not context.blueprint
+            and context.blind.boss and not self.getting_sliced then
+                ease_dollars(-G.GAME.dollars, true)
+                self.ability.extra.x_mult = self.ability.extra.x_mult + 0.5
+                return {
+                    message = localize('k_upgrade_ex'),
+                    colour = G.C.RED
+                }
             end
         elseif context.selling_self then
             if self.ability.name == 'Shady Dealer' then
@@ -302,6 +343,11 @@ function Card:generate_UIBox_ability_table()
     if self.ability.name == 'Devilish Joker' then
         loc_vars = { self.ability.extra.x_mult }
     end
+
+    if self.ability.name == 'Devoted Joker' then
+        loc_vars = { self.ability.extra.x_mult }
+    end
+
     if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
         badges.card_type = card_type
     end
@@ -323,7 +369,7 @@ function Card:generate_UIBox_ability_table()
         loc_vars = loc_vars or {}; loc_vars.sticker = self.sticker
     end
 
-    if self.ability.name == 'Devilish Joker' then
+    if self.ability.name == 'Devilish Joker' or self.ability.name == 'Devoted Joker' then
         return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, false, nil, nil)
     end
 
