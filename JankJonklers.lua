@@ -123,6 +123,45 @@ function SMODS.INIT.MultiJokersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_old_man", {
+        unlocked = true,
+        discovered = true,
+        rarity = 3,
+        cost = 8,
+        name = "Old Man Joker",
+        set = "Joker",
+        config = {
+            extra = {
+            },
+        },
+    }, {
+        name = "Old Man Joker",
+        text = {
+            "When {C:attention}Boss Blind{} is selected",
+            "create a free {C:attention}Ethereal Tag{},"
+        }
+    });
+
+    add_item(MOD_ID, "Joker", "j_box_of_stuff", {
+        unlocked = true,
+        discovered = true,
+        rarity = 2,
+        cost = 5,
+        name = "Box of Stuff",
+        set = "Joker",
+        config = {
+            extra = {
+            },
+        },
+    }, {
+        name = "Box of Stuff",
+        text = {
+            "When {C:attention}Boss Blind{} is selected",
+            "create three free {C:attention}Standard Tags{},",
+            "then destroy this card"
+        }
+    });
+
     add_item(MOD_ID, "Joker", "j_expanded_art", {
         unlocked = true,
         discovered = true,
@@ -254,13 +293,15 @@ function Card:calculate_joker(context)
                     } 
                 end
                 if self.ability.name == "Highlander Joker" and context.scoring_name == "High Card" and not context.blueprint then
-                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
-                    context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra
-                    return {
-                        extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
-                        colour = G.C.CHIPS,
-                        card = self
-                    }
+                    if not context.other_card.debuff then
+                        context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
+                        context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra
+                        return {
+                            extra = {message = localize('k_upgrade_ex'), colour = G.C.CHIPS},
+                            colour = G.C.CHIPS,
+                            card = self
+                        }
+                    end
                 end
                 if self.ability.name == "Lieutenant Joker" and context.scoring_name == "High Card" then
                     for k, v in ipairs(context.full_hand) do
@@ -314,6 +355,40 @@ function Card:calculate_joker(context)
                     message = localize('k_upgrade_ex'),
                     colour = G.C.RED
                 }
+            end
+            if self.ability.name == 'Old Man Joker' and not context.blueprint
+            and context.blind.boss and not self.getting_sliced then
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        add_tag(Tag('tag_ethereal'))
+                        play_sound('generic1', 0.6 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.1 + math.random()*0.1, 0.4)
+                        return true
+                    end)
+                }))
+            end
+            if self.ability.name == 'Box of Stuff' and not context.blueprint
+            and context.blind.boss and not self.getting_sliced then
+                G.E_MANAGER:add_event(Event({
+                    func = (function()
+                        add_tag(Tag('tag_standard'))
+                        add_tag(Tag('tag_standard'))
+                        add_tag(Tag('tag_standard'))
+                        play_sound('generic1', 0.6 + math.random()*0.1, 0.8)
+                        play_sound('holo1', 1.1 + math.random()*0.1, 0.4)
+                        self.T.r = -0.2
+                        self:juice_up(0.3, 0.4)
+                        self.states.drag.is = true
+                        self.children.center.pinch.x = true
+                        return true
+                    end)
+                }))
+                G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
+                func = function()
+                        G.jokers:remove_card(self)
+                        self:remove()
+                        self = nil
+                    return true; end})) 
             end
         elseif context.selling_self then
             if self.ability.name == 'Shady Dealer' then
