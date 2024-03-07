@@ -237,7 +237,7 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-                if self.ability.name == 'Suspicious Vase' and (context.other_card:get_id() == 2 or context.other_card:get_id() == 3) or context.other_card:get_id() == 4) then
+                if self.ability.name == 'Suspicious Vase' and (context.other_card:get_id() == 2 or context.other_card:get_id() == 3 or context.other_card:get_id() == 4) then
                     if context.other_card.ability.name == 'Glass Card' then
                         return nil
                     end
