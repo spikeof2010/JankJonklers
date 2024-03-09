@@ -15,7 +15,7 @@ let jokers = [
       "When {C:attention}Boss Blind{} is selected",
       "gain {X:mult,C:white}x0.5{} Mult, then",
       "set your {C:attention}money{} to {C:attention}$0{}",
-      "{C:inactive}(Currently {X:mult,C:white}x#1#{C:inactive})"
+      "{C:inactive}(Currently {X:mult,C:white}x1{C:inactive})"
     ],
     image_url: "assets/1x/j_devoted.png",
     rarity: "Rare"
