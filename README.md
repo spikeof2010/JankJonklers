@@ -1,7 +1,7 @@
 Requires Steamodded!
 https://github.com/Steamopollys/Steamodded
 
-Featuring 9 Jo(n)k(l)ers so far:
+Featuring 11 Jo(n)k(l)ers so far:
 
 
 
@@ -26,6 +26,14 @@ Highlander Joker
 Common
 
 Every scoring card permanently gains +20 chips when scored if your hand is a High Card
+
+
+
+Mind Mage
+
+Uncommon
+
++3 Hand Size. When you play a hand, discard the 2 rightmost cards.
 
 
 
@@ -74,3 +82,11 @@ Box of Stuff
 Uncommon
 
 After a Boss Blind is selected, create three free Standard Tags, then destroy this card
+
+
+
+Fortuno
+
+Legendary
+
+Whenever you score a numbered card in your first hand each round, destroy it and gain $3
