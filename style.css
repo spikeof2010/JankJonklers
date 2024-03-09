@@ -1,0 +1,80 @@
+/* import m6x11plus.ttf */
+
+@font-face {
+  font-family: 'm6x11plus';
+  src: url('m6x11plus.ttf') format('truetype');
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+
+  font-family: 'm6x11plus';
+  text-shadow: #000 2px 2px 2px;
+}
+
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  opacity: 0.3;
+  z-index: -1;
+  pointer-events: none;
+}
+
+main {
+  text-align: center;
+  color: white;
+  padding: 1rem;
+  width: min(60rem, 100%);
+  margin: 1rem auto;
+  font-size: 1.5rem;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.jokers {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 1rem;
+}
+.joker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px solid white;
+  border-radius: 1rem;
+
+  background-color: #374244;
+}
+.joker .text {
+  font-size: 1.25rem;
+}
+.joker img {
+  height: 190px;
+  image-rendering: pixelated;
+}
+
+#download {
+  background-color: #374244;
+  color: white;
+  padding: 1rem;
+  border: 2px solid white;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+.rarity {
+  width: 142px;
+  border-radius: 8px;
+  padding: 8px;
+}
