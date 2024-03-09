@@ -1,4 +1,4 @@
-# Project Title: [Your Project Name]
+# Jank Jonklers
 
 Requires [Steamodded](https://github.com/Steamopollys/Steamodded)!
 
