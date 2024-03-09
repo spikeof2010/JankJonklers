@@ -79,11 +79,7 @@ h1 {
   padding: 8px;
 }
 
-.footer-thanks {
-  position: fixed;
-  width: 100%;
-  bottom: 20px;
-  text-align: center;
-  z-index: 10;
-  color: #fff;
+h3 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
