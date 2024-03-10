@@ -214,7 +214,6 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 5,
         name = "Box of Stuff",
         set = "Joker",
-        eternal_compat = false,
         config = {
             extra = {
             },
@@ -377,7 +376,7 @@ function Card:calculate_joker(context)
                         card = self
                     } 
                 end
-                if self.ability.name == "Highlander Joker" and context.scoring_name == "High Card" and not context.blueprint then
+                if self.ability.name == "Highlander Joker" and context.scoring_name == "High Card" then
                     if not context.other_card.debuff then
                         context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus or 0
                         context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra
@@ -449,7 +448,7 @@ function Card:calculate_joker(context)
                     return nil
                 end
             elseif context.before then
-                if self.ability.name == 'Mind Mage' then
+                if self.ability.name == 'Mind Mage' and not context.blueprint then
                     G.E_MANAGER:add_event(Event({ func = function()
                         local any_selected = nil
                         local _cards = {}
@@ -537,23 +536,24 @@ function Card:calculate_joker(context)
     return ret_val
 end
 
+local add_to_deckref = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
     if not self.added_to_deck then
-        self.added_to_deck = true
         if self.ability.name == 'Mind Mage' then
             G.hand:change_size(self.ability.extra.h_size)
         end
     end
+    add_to_deckref(self, from_debuff)
 end
 
-
+local remove_from_deckref = Card.remove_from_deck
 function Card:remove_from_deck(from_debuff)
     if self.added_to_deck then
-        self.added_to_deck = false
         if self.ability.name == 'Mind Mage' then
             G.hand:change_size(-self.ability.extra.h_size)
         end
     end
+    remove_from_deckref(self, from_debuff)
 end
 
 local card_uiref = Card.generate_UIBox_ability_table;
