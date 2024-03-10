@@ -36,7 +36,7 @@ let jokers = [
       "Gains {C:mult}+4{} Mult per",
       "{C:attention}Planet{} card used, resets",
       "when {C:attention}Boss Blind{} is defeated",
-      "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+      "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
     ],
     image_url: "assets/1x/j_sentai.png",
     rarity: "Uncommon"
@@ -105,7 +105,7 @@ let jokers = [
     text: [
       "After you play a {C:attention}High Card{}",
       "increase the {C:attention}rank{}",
-      "of each card played"
+      "of each card played."
     ],
     image_url: "assets/1x/j_lieutenant.png",
     rarity: "Rare"
