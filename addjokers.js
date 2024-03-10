@@ -105,7 +105,7 @@ let jokers = [
     text: [
       "After you play a {C:attention}High Card{}",
       "increase the {C:attention}rank{}",
-      "of each card played."
+      "of each card played"
     ],
     image_url: "assets/1x/j_lieutenant.png",
     rarity: "Rare"
