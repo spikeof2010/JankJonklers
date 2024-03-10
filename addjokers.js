@@ -31,6 +31,27 @@ let jokers = [
     rarity: "Uncommon"
   },
   {
+    name: "Sentai Joker",
+    text: [
+      "Gains {C:mult}+4{} Mult per",
+      "{C:attention}Planet{} card used, resets",
+      "when {C:attention}Boss Blind{} is defeated",
+      "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+    ],
+    image_url: "assets/1x/j_sentai.png",
+    rarity: "Uncommon"
+  },
+  {
+    name: "Pawn Joker",
+    text: [
+      "{C:green}1 in 2{} chance to",
+      "get {C:attention}$2{} when you",
+      "{C:attention}sell{} a card"
+    ],
+    image_url: "assets/1x/j_pawn.png",
+    rarity: "Common"
+  },
+  {
     name: "Fortuno",
     text: [
       "Whenever you score a",

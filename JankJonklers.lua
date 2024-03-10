@@ -101,6 +101,26 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_sentai", {
+        unlocked = true,
+        discovered = true,
+        rarity = 2,
+        cost = 5,
+        name = "Sentai Joker",
+        set = "Joker",
+        config = {
+            extra = { mult = 4 },
+        },
+    }, {
+        name = "Sentai Joker",
+        text = {
+            "Gains {C:mult}+4{} Mult per",
+            "{C:attention}Planet{} card used, resets",
+            "when {C:attention}Boss Blind{} is defeated",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+        }
+    });
+
     -- add_item(MOD_ID, "Joker", "j_alloyed", {
     --     unlocked = true,
     --     discovered = true,
@@ -163,6 +183,28 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
             "{C:attention}+3{} hand size",
             "Discard the 2 rightmost",
             "cards per hand played"
+        }
+    });
+
+    add_item(MOD_ID, "Joker", "j_pawn", {
+        unlocked = true,
+        discovered = true,
+        rarity = 1,
+        cost = 4,
+        name = "Pawn Joker",
+        set = "Joker",
+        config = {
+            extra = {
+                odds = 2,
+                dollars = 2
+            },
+        },
+    }, {
+        name = "Pawn Joker",
+        text = {
+            "{C:green}#1# in #2#{} chance to",
+            "get {C:attention}$2{} when you",
+            "{C:attention}sell{} a card"
         }
     });
 
@@ -447,6 +489,12 @@ function Card:calculate_joker(context)
                     end
                     return nil
                 end
+                if self.ability.name == 'Sentai Joker' and self.ability.mult > 0 then
+                    return {
+                        message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
+                        mult_mod = self.ability.mult + self.ability.extra.mult
+                    }
+                end
             elseif context.before then
                 if self.ability.name == 'Mind Mage' and not context.blueprint then
                     G.E_MANAGER:add_event(Event({ func = function()
@@ -468,12 +516,16 @@ function Card:calculate_joker(context)
                         if any_selected then G.FUNCS.discard_cards_from_highlighted(nil, true) end
                     return true end })) 
                 end
+            else
             end
         elseif context.end_of_round then
-            if context.individual then
-                if self.ability.name == 'Alloyed Joker' then
-                    G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + 5
-                    G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))
+            if not context.blueprint then
+                if self.ability.name == 'Sentai Joker' and G.GAME.blind.boss and self.ability.mult > 1 then
+                    self.ability.mult = 0
+                    return {
+                        message = localize('k_reset'),
+                        colour = G.C.RED
+                    }
                 end
             end
         elseif context.setting_blind and not self.getting_sliced then
@@ -531,6 +583,27 @@ function Card:calculate_joker(context)
                     end)
                 }))
             end
+        elseif context.selling_card then
+            if self.ability.name == 'Pawn Joker' then
+                if pseudorandom('pawn_broker') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                    ease_dollars(self.ability.extra.dollars)
+                    return {
+                        message = localize('$')..self.ability.extra.dollars,
+                        colour = G.C.MONEY,
+                        delay = 0.45,
+                        card = self
+                    }
+                end
+            end
+        elseif context.using_consumeable then
+            if self.ability.name == 'Sentai Joker' and not context.blueprint and context.consumeable.ability.set == 'Planet' then
+                self.ability.mult = self.ability.mult + self.ability.extra.mult
+                G.E_MANAGER:add_event(Event({
+                    func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_mult',vars={self.ability.extra.mult}}}); return true
+                    end}))
+                return
+            end
+            return
         end
     end
     return ret_val
@@ -570,6 +643,15 @@ function Card:generate_UIBox_ability_table()
         loc_vars = { self.ability.extra.x_mult }
     end
 
+    if self.ability.name == 'Pawn Joker' then
+        loc_vars = {G.GAME.probabilities.normal, self.ability.extra.odds}
+    end
+    
+    if self.ability.name == 'Sentai Joker' then
+        loc_vars = { self.ability.mult }
+    end
+
+
     if (card_type ~= 'Locked' and card_type ~= 'Undiscovered' and card_type ~= 'Default') or self.debuff then
         badges.card_type = card_type
     end
@@ -591,7 +673,7 @@ function Card:generate_UIBox_ability_table()
         loc_vars = loc_vars or {}; loc_vars.sticker = self.sticker
     end
 
-    if self.ability.name == 'Devilish Joker' or self.ability.name == 'Devoted Joker' then
+    if self.ability.name == 'Devilish Joker' or self.ability.name == 'Devoted Joker' or self.ability.name == 'Pawn Joker' or self.ability.name == 'Sentai Joker' then
         return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, false, nil, nil)
     end
 
