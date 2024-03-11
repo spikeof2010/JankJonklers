@@ -33,7 +33,7 @@ let jokers = [
   {
     name: "Sentai Joker",
     text: [
-      "Gains {C:mult}+4{} Mult per",
+      "Gains {C:mult}+6{} Mult per",
       "{C:attention}Planet{} card used, resets",
       "when {C:attention}Boss Blind{} is defeated",
       "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"

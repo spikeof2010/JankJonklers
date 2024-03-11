@@ -109,12 +109,12 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         name = "Sentai Joker",
         set = "Joker",
         config = {
-            extra = { mult = 4 },
+            extra = { mult = 6 },
         },
     }, {
         name = "Sentai Joker",
         text = {
-            "Gains {C:mult}+4{} Mult per",
+            "Gains {C:mult}+6{} Mult per",
             "{C:attention}Planet{} card used, resets",
             "when {C:attention}Boss Blind{} is defeated",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
