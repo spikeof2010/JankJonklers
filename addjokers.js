@@ -39,7 +39,7 @@ let jokers = [
       "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
     ],
     image_url: "assets/1x/j_sentai.png",
-    rarity: "Uncommon"
+    rarity: "Common"
   },
   {
     name: "Pawn Joker",
@@ -118,6 +118,26 @@ let jokers = [
     ],
     image_url: "assets/1x/j_shady_dealer.png",
     rarity: "Rare"
+  },
+  {
+    name: "Minimalist Joker",
+    text: [
+      "{C:mult}+10{} Mult if played hand",
+      "contains no {C:attention}face cards{}"
+    ],
+    image_url: "assets/1x/j_minimalist.png",
+    rarity: "Common"
+  },
+  {
+    name: "Ternary System",
+    text: [
+      "Create a {C:planet}Planet{} card",
+      "if played hand contains {C:attention}3{}",
+      "cards and a {C:attention}Three of a Kind{}",
+      "{C:inactive}(Must have room)"
+    ],
+    image_url: "assets/1x/j_ternary_system.png",
+    rarity: "Common"
   },
   {
     name: "Suspicous Vase",

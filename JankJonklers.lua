@@ -104,8 +104,8 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
     add_item(MOD_ID, "Joker", "j_sentai", {
         unlocked = true,
         discovered = true,
-        rarity = 2,
-        cost = 5,
+        rarity = 1,
+        cost = 4,
         name = "Sentai Joker",
         set = "Joker",
         config = {
@@ -118,6 +118,44 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
             "{C:attention}Planet{} card used, resets",
             "when {C:attention}Boss Blind{} is defeated",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+        }
+    });
+
+    add_item(MOD_ID, "Joker", "j_ternary_system", {
+        unlocked = true,
+        discovered = true,
+        rarity = 1,
+        cost = 4,
+        name = "Ternary System",
+        set = "Joker",
+        config = {
+            extra = { poker_hand = 'Three of a Kind' },
+        },
+    }, {
+        name = "Ternary System",
+        text = {
+            "Create a {C:planet}Planet{} card",
+            "if played hand contains {C:attention}3{}",
+            "cards and a {C:attention}Three of a Kind{}",
+            "{C:inactive}(Must have room)"
+        }
+    });
+
+    add_item(MOD_ID, "Joker", "j_minimalist", {
+        unlocked = true,
+        discovered = true,
+        rarity = 1,
+        cost = 4,
+        name = "Minimalist Joker",
+        set = "Joker",
+        config = {
+            extra = { mult = 10 },
+        },
+    }, {
+        name = "Minimalist Joker",
+        text = {
+            "{C:mult}+10{} Mult if played hand",
+            "contains no {C:attention}face cards{}"
         }
     });
 
@@ -489,10 +527,46 @@ function Card:calculate_joker(context)
                     end
                     return nil
                 end
+                if self.ability.name == "Ternary System" and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then
+                    if #context.full_hand == 3 then
+                        if next(context.poker_hands[self.ability.extra.poker_hand]) then
+                            G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
+                            G.E_MANAGER:add_event(Event({
+                                trigger = 'before',
+                                delay = 0.0,
+                                func = (function()
+                                        local card = create_card('Planet',G.consumeables, nil, nil, nil, nil, nil, '8ba')
+                                        card:add_to_deck()
+                                        G.consumeables:emplace(card)
+                                        G.GAME.consumeable_buffer = 0
+                                    return true
+                                end)}))
+                            return {
+                                message = localize('k_plus_planet'),
+                                colour = G.C.SECONDARY_SET.Planet,
+                                card = self
+                            }
+                        end
+                    end
+                    return nil
+                end
                 if self.ability.name == 'Sentai Joker' and self.ability.mult > 0 then
                     return {
                         message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
                         mult_mod = self.ability.mult + self.ability.extra.mult
+                    }
+                end
+                if self.ability.name == 'Minimalist Joker' then
+                    local CheckForFaces = true
+                    for k, v in ipairs(context.full_hand) do
+                        CheckForFaces = CheckForFaces and not v:is_face()
+                    end
+                    if not CheckForFaces then
+                        return nil
+                    end
+                    return {
+                        message = localize{type='variable',key='a_mult',vars={self.ability.extra.mult}},
+                        mult_mod = self.ability.extra.mult
                     }
                 end
             elseif context.before then
