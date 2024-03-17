@@ -52,6 +52,15 @@ let jokers = [
     rarity: "Common"
   },
   {
+    name: "Old Man Joker",
+    text: [
+      "When {C:attention}Boss Blind{} is selected",
+      "create a free {C:attention}Ethereal Tag{}"
+    ],
+    image_url: "assets/1x/j_old_man.png",
+    rarity: "Rare"
+  },
+  {
     name: "Fortuno",
     text: [
       "Whenever you score a",
@@ -81,15 +90,6 @@ let jokers = [
     ],
     image_url: "assets/1x/j_stanczyk.png",
     rarity: "Legendary"
-  },
-  {
-    name: "Old Man Joker",
-    text: [
-      "When {C:attention}Boss Blind{} is selected",
-      "create a free {C:attention}Ethereal Tag{}"
-    ],
-    image_url: "assets/1x/j_old_man.png",
-    rarity: "Rare"
   },
   {
     name: "Box of Stuff",
