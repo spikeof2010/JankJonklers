@@ -2,7 +2,7 @@ let jokers = [
   {
     name: "Devilish Joker",
     text: [
-      "{X:mult,C:white}x3{} Mult if played",
+      "{X:mult,C:white}X3{} Mult if played",
       "hand contains only {C:attention}6s{}",
       "or {C:attention}Gold Cards{}"
     ],
@@ -13,7 +13,7 @@ let jokers = [
     name: "Devoted Joker",
     text: [
       "When {C:attention}Boss Blind{} is selected",
-      "gain {X:mult,C:white}x0.5{} Mult, then",
+      "gain {X:mult,C:white}X0.5{} Mult, then",
       "set your {C:attention}money{} to {C:attention}$0{}",
       "{C:inactive}(Currently {X:mult,C:white}x1{C:inactive})"
     ],
@@ -33,7 +33,7 @@ let jokers = [
   {
     name: "Sentai Joker",
     text: [
-      "Gains {C:mult}+6{} Mult per",
+      "Gains {C:mult}+8{} Mult per",
       "{C:attention}Planet{} card used, resets",
       "when {C:attention}Boss Blind{} is defeated",
       "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
@@ -60,6 +60,26 @@ let jokers = [
       "destroy it and gain {C:attention}$3{}"
     ],
     image_url: "assets/1x/j_fortuno.png",
+    rarity: "Legendary"
+  },
+  {
+    name: "Feste",
+    text: [
+      "Upgrade the first hand",
+      "you play each {C:attention}Boss Blind{}",
+      "by {C:attention}4{} levels"
+    ],
+    image_url: "assets/1x/j_feste.png",
+    rarity: "Legendary"
+  },
+  {
+    name: "Stańczyk",
+    text: [
+      "Retrigger {C:attention}Enhanced Cards{}",
+      "that are played or",
+      "held in hand"
+    ],
+    image_url: "assets/1x/j_stanczyk.png",
     rarity: "Legendary"
   },
   {
@@ -109,6 +129,16 @@ let jokers = [
     ],
     image_url: "assets/1x/j_lieutenant.png",
     rarity: "Rare"
+  },
+  {
+    name: "Alchemist Joker",
+    text: [
+      "{C:green}1 in 3{} chance to create a",
+      "random {C:attention}Planet{} card when you",
+      "discard five {C:attention}Numbered{} cards"
+    ],
+    image_url: "assets/1x/j_alchemist.png",
+    rarity: "Common"
   },
   {
     name: "Shady Dealer",
