@@ -135,7 +135,7 @@ let jokers = [
     text: [
       "{C:green}1 in 3{} chance to create a",
       "random {C:attention}Planet{} card when you",
-      "discard five {C:attention}Numbered{} cards"
+      "discard five {C:attention}numbered{} cards"
     ],
     image_url: "assets/1x/j_alchemist.png",
     rarity: "Common"
