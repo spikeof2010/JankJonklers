@@ -101,6 +101,25 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_sir", {
+        unlocked = true,
+        discovered = true,
+        rarity = 1,
+        cost = 4,
+        name = "Sir Joker",
+        set = "Joker",
+        config = {
+            extra = { x_mult = 1.5 },
+        },
+    }, {
+        name = "Sir Joker",
+        text = {
+            "{X:mult,C:white}X1.5{} Mult during",
+            "{C:attention}Boss Blinds{} or",
+            "or your {C:attention}final hand{}"
+        }
+    });
+
     add_item(MOD_ID, "Joker", "j_sentai", {
         unlocked = true,
         discovered = true,
@@ -117,6 +136,25 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
             "Gains {C:mult}+8{} Mult per",
             "{C:attention}Planet{} card used, resets",
             "when {C:attention}Boss Blind{} is defeated",
+            "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
+        }
+    });
+
+    add_item(MOD_ID, "Joker", "j_makeshift", {
+        unlocked = true,
+        discovered = true,
+        rarity = 1,
+        cost = 4,
+        name = "Makeshift Joker",
+        set = "Joker",
+        config = {
+            extra = { mult = 0, },
+        },
+    }, {
+        name = "Makeshift Joker",
+        text = {
+            "Gains {C:mult}+1{} Mult per",
+            "{C:attention}card{} sold",
             "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
         }
     });
@@ -226,6 +264,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 8,
         name = "Devoted Joker",
         set = "Joker",
+        eternal_compat = true,
         config = {
             extra = {
                 x_mult = 1
@@ -248,6 +287,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 6,
         name = "Mind Mage",
         set = "Joker",
+        eternal_compat = true,
         config = {
             extra = {
                 h_size = 3
@@ -257,7 +297,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         name = "Mind Mage",
         text = {
             "{C:attention}+3{} hand size",
-            "Discard the 2 rightmost",
+            "Discard the 2 leftmost",
             "cards per hand played"
         }
     });
@@ -269,17 +309,18 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 4,
         name = "Pawn Joker",
         set = "Joker",
+        eternal_compat = true,
         config = {
             extra = {
                 odds = 2,
-                dollars = 2
+                dollars = 3
             },
         },
     }, {
         name = "Pawn Joker",
         text = {
             "{C:green}#1# in #2#{} chance to",
-            "get {C:attention}$2{} when you",
+            "get {C:attention}$3{} when you",
             "{C:attention}sell{} a card"
         }
     });
@@ -291,6 +332,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 4,
         name = "Alchemist Joker",
         set = "Joker",
+        eternal_compat = true,
         config = {
             extra = {
                 odds = 3,
@@ -301,7 +343,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         text = {
             "{C:green}#1# in #2#{} chance to create a",
             "random {C:attention}Planet{} card when you",
-            "discard five {C:attention}Numbered{} cards"
+            "discard five {C:attention}numbered{} cards"
         }
     });
 
@@ -314,15 +356,15 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         set = "Joker",
         config = {
             extra = {
-                dollars = 3
+                dollars = 3,
+                trash_list = {}
             },
         },
     }, {
         name = "Fortuno",
         text = {
-            "Whenever you score a",
-            "{C:attention}numbered card{} in your",
-            "first hand each round,",
+            "For each {C:attention}numbered card{} scored",
+            "in your first hand each round,",
             "destroy it and gain {C:attention}$3{}"
         }
     });
@@ -353,6 +395,7 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         cost = 8,
         name = "Old Man Joker",
         set = "Joker",
+        eternal_compat = true,
         config = {
             extra = {
             },
@@ -441,6 +484,24 @@ function SMODS.INIT.JankJonklersModJankJonklersMod()
         }
     });
 
+    add_item(MOD_ID, "Joker", "j_cut_the_cheese", {
+        unlocked = true,
+        discovered = true,
+        rarity = 3,
+        cost = 8,
+        name = "Cut the Cheese",
+        set = "Joker",
+        config = {
+        },
+    }, {
+        name = "Cut the Cheese",
+        text = {
+            "When {C:attention}Blind{} is selected",
+            "create a random {C:attention}Food Joker{}",
+            "{C:inactive}(Must have room){}"
+        }
+    });
+
     add_item(MOD_ID, "Joker", "j_shady_dealer", {
         unlocked = true,
         discovered = true,
@@ -501,25 +562,7 @@ function Card:calculate_joker(context)
                         card = self
                     }
                 end
-                if self.ability.name == 'Fortuno' and not context.blueprint and G.GAME.current_round.hands_played == 0 then
-                    if context.other_card:is_face() or context.other_card:get_id() == 14 then
-                        return nil
-                    end
-                    local card_to_destroy = context.other_card or nil
-                    card_to_destroy.getting_sliced = true
-                    G.E_MANAGER:add_event(Event({func = function()
-                        (context.blueprint_card or self):juice_up(0.8, 0.8)
-                        card_to_destroy:start_dissolve({G.C.RED}, nil, 1.6)
-                    return true end }))
-                    ease_dollars(self.ability.extra.dollars)
-                    return {
-                        message = localize('$')..self.ability.extra.dollars,
-                        colour = G.C.MONEY,
-                        delay = 0.45, 
-                        remove = true,
-                        card = self
-                    }
-                end
+
                 if self.ability.name == 'Suspicious Vase' and (context.other_card:get_id() == 2 or context.other_card:get_id() == 3 or context.other_card:get_id() == 4) then
                     if context.other_card.ability.name == 'Glass Card' then
                         return nil
@@ -617,6 +660,12 @@ function Card:calculate_joker(context)
                         Xmult_mod = self.ability.extra.x_mult
                     }
                 end
+                if self.ability.name == 'Sir Joker' and (G.GAME.current_round.hands_left == 0 or G.GAME.blind.boss) then
+                    return {
+                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.x_mult } },
+                        Xmult_mod = self.ability.extra.x_mult
+                    }
+                end
                 if self.ability.name == "Devoted Joker" then
                     if self.ability.extra.x_mult > 1 then
                         return {
@@ -655,6 +704,12 @@ function Card:calculate_joker(context)
                         mult_mod = self.ability.mult + self.ability.extra.mult
                     }
                 end
+                if self.ability.name == 'Makeshift Joker' and self.ability.mult > 0 then
+                    return {
+                        message = localize{type='variable',key='a_mult',vars={self.ability.mult}},
+                        mult_mod = self.ability.mult + self.ability.extra.mult
+                    }
+                end
                 if self.ability.name == 'Minimalist Joker' then
                     local CheckForFaces = true
                     for k, v in ipairs(context.full_hand) do
@@ -682,6 +737,24 @@ function Card:calculate_joker(context)
                         message = localize('k_level_up_ex')
                     }
                 end
+                if self.ability.name == 'Fortuno' and not context.blueprint and G.GAME.current_round.hands_played == 0 then
+                    for k, v in ipairs(context.scoring_hand) do
+                        if not (v:is_face() or v:get_id() == 14) then
+                            table.insert(self.ability.extra.trash_list, v)
+                            local card_to_destroy = v
+                            card_to_destroy.getting_sliced = true
+                            card_to_destroy:start_dissolve()
+                            ease_dollars(self.ability.extra.dollars)
+                        end
+                    end
+                    return {
+                        message = localize('$')..self.ability.extra.dollars,
+                        colour = G.C.MONEY,
+                        delay = 0.45, 
+                        remove = true,
+                        card = self
+                    }
+                end
                 if self.ability.name == 'Mind Mage' and not context.blueprint then
                     G.E_MANAGER:add_event(Event({ func = function()
                         local any_selected = nil
@@ -691,10 +764,9 @@ function Card:calculate_joker(context)
                         end
                         for i = 1, 2 do
                             if G.hand.cards[i] then 
-                                local last_index = #_cards
-                                local selected_card = _cards[last_index]
+                                local selected_card = _cards[i]
                                 G.hand:add_to_highlighted(selected_card, true)
-                                table.remove(_cards, last_index)
+                                table.remove(_cards, i)
                                 any_selected = true
                                 play_sound('card1', 1)
                             end
@@ -702,6 +774,7 @@ function Card:calculate_joker(context)
                         if any_selected then G.FUNCS.discard_cards_from_highlighted(nil, true) end
                     return true end })) 
                 end
+            elseif context.after then
             else
             end
         elseif context.end_of_round then
@@ -713,6 +786,12 @@ function Card:calculate_joker(context)
                         colour = G.C.RED
                     }
                 end
+                if self.ability.name == 'Fortuno' then
+                    for i = 1, #self.ability.extra.trash_list do
+                        self.ability.extra.trash_list[i]:start_dissolve()
+                    end
+                    self.ability.extra.trash_list = {}
+                end
             end
         elseif context.setting_blind and not self.getting_sliced then
             if self.ability.name == 'Devoted Joker' and not context.blueprint
@@ -723,6 +802,31 @@ function Card:calculate_joker(context)
                     message = localize('k_upgrade_ex'),
                     colour = G.C.RED
                 }
+            end
+            if self.ability.name == 'Cut the Cheese' and not (context.blueprint_card or self).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
+                local jokers_to_create = math.min(1, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))
+                local food_list = {
+                    "j_popcorn",
+                    "j_gros_michel",
+                    "j_ice_cream",
+                    "j_turtle_bean",
+                    "j_ramen",
+                    "j_selzer",
+                    "j_diet_cola"
+                }
+                G.GAME.joker_buffer = G.GAME.joker_buffer + jokers_to_create
+                G.E_MANAGER:add_event(Event({
+                    func = function() 
+                        for i = 1, jokers_to_create do
+                            local chosen_joker = pseudorandom_element(food_list, pseudoseed('ctc'))
+                            local card = create_card('Joker', G.jokers, nil, nil, nil, nil, chosen_joker, nil)
+                            card:add_to_deck()
+                            G.jokers:emplace(card)
+                            G.GAME.joker_buffer = 0
+                        end
+                        return true
+                    end}))   
+                    card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil, {message = localize('k_plus_joker'), colour = G.C.BLUE}) 
             end
             if self.ability.name == 'Old Man Joker' and not context.blueprint
             and context.blind.boss and not self.getting_sliced then
@@ -764,7 +868,7 @@ function Card:calculate_joker(context)
                 for k, v in ipairs(context.full_hand) do
                     if (v:get_id() ~= 14 and not v:is_face()) then numbered_cards = numbered_cards + 1 end
                 end
-                if numbered_cards >= 5 and pseudorandom('pawn_broker') < G.GAME.probabilities.normal / self.ability.extra.odds then
+                if numbered_cards >= 5 and pseudorandom('alchemist') < G.GAME.probabilities.normal / self.ability.extra.odds then
                     G.GAME.consumeable_buffer = G.GAME.consumeable_buffer + 1
                     G.E_MANAGER:add_event(Event({
                         trigger = 'before',
@@ -806,11 +910,18 @@ function Card:calculate_joker(context)
                     }
                 end
             end
+            if self.ability.name == 'Makeshift Joker' and not context.blueprint then
+                self.ability.mult = self.ability.mult + 1
+                G.E_MANAGER:add_event(Event({
+                    func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_mult',vars={self.ability.mult}}}); return true
+                    end}))
+                return
+            end
         elseif context.using_consumeable then
             if self.ability.name == 'Sentai Joker' and not context.blueprint and context.consumeable.ability.set == 'Planet' then
                 self.ability.mult = self.ability.mult + self.ability.extra.mult
                 G.E_MANAGER:add_event(Event({
-                    func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_mult',vars={self.ability.extra.mult}}}); return true
+                    func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize{type='variable',key='a_mult',vars={self.ability.mult}}}); return true
                     end}))
                 return
             end
@@ -850,6 +961,10 @@ function Card:generate_UIBox_ability_table()
         loc_vars = { self.ability.extra.x_mult }
     end
 
+    if self.ability.name == 'Fortuno' then
+        loc_vars = { self.ability.extra.trash_list }
+    end
+
     if self.ability.name == 'Devoted Joker' then
         loc_vars = { self.ability.extra.x_mult }
     end
@@ -863,6 +978,10 @@ function Card:generate_UIBox_ability_table()
     end
     
     if self.ability.name == 'Sentai Joker' then
+        loc_vars = { self.ability.mult }
+    end
+
+    if self.ability.name == 'Makeshift Joker' then
         loc_vars = { self.ability.mult }
     end
 
@@ -888,7 +1007,7 @@ function Card:generate_UIBox_ability_table()
         loc_vars = loc_vars or {}; loc_vars.sticker = self.sticker
     end
 
-    if self.ability.name == 'Devilish Joker' or self.ability.name == 'Devoted Joker' or self.ability.name == 'Pawn Joker' or self.ability.name == 'Sentai Joker' or self.ability.name == 'Alchemist Joker' then
+    if self.ability.name == 'Devilish Joker' or self.ability.name == 'Devoted Joker' or self.ability.name == 'Makeshift Joker' or self.ability.name == 'Fortuno' or self.ability.name == 'Pawn Joker' or self.ability.name == 'Sentai Joker' or self.ability.name == 'Alchemist Joker' then
         return generate_card_ui(self.config.center, nil, loc_vars, card_type, badges, false, nil, nil)
     end
 

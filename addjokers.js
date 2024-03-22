@@ -24,7 +24,7 @@ let jokers = [
     name: "Mind Mage",
     text: [
       "{C:attention}+3{} hand size",
-      "Discard the 2 rightmost",
+      "Discard the 2 leftmost",
       "cards per hand played"
     ],
     image_url: "assets/1x/j_mind_mage.png",
@@ -45,7 +45,7 @@ let jokers = [
     name: "Pawn Joker",
     text: [
       "{C:green}1 in 2{} chance to",
-      "get {C:attention}$2{} when you",
+      "get {C:attention}$3{} when you",
       "{C:attention}sell{} a card"
     ],
     image_url: "assets/1x/j_pawn.png",
@@ -148,6 +148,36 @@ let jokers = [
     ],
     image_url: "assets/1x/j_shady_dealer.png",
     rarity: "Rare"
+  },
+  {
+    name: "Cut the Cheese",
+    text: [
+      "When {C:attention}Blind{} is selected",
+      "create a random {C:attention}Food Joker{}",
+      "{C:inactive}(Must have room){}"
+    ],
+    image_url: "assets/1x/j_cut_the_cheese.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Sir Joker",
+    text: [
+      "{X:mult,C:white}X1.5{} Mult during",
+      "{C:attention}Boss Blinds{} or",
+      "or your {C:attention}final hand{}"
+    ],
+    image_url: "assets/1x/j_sir.png",
+    rarity: "Common"
+  },
+  {
+    name: "Makeshift Joker",
+    text: [
+      "Gains {C:mult}+1{} Mult per",
+      "{C:attention}card{} sold",
+      "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult)"
+    ],
+    image_url: "assets/1x/j_makeshift.png",
+    rarity: "Common"
   },
   {
     name: "Minimalist Joker",
