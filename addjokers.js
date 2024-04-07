@@ -131,13 +131,13 @@ let jokers = [
     rarity: "Rare"
   },
   {
-    name: "Alchemist Joker",
+    name: "Scrapper Joker",
     text: [
       "{C:green}1 in 3{} chance to create a",
       "random {C:attention}Planet{} card when you",
       "discard five {C:attention}numbered{} cards"
     ],
-    image_url: "assets/1x/j_alchemist.png",
+    image_url: "assets/1x/j_scrapper.png",
     rarity: "Common"
   },
   {
@@ -168,6 +168,17 @@ let jokers = [
     ],
     image_url: "assets/1x/j_sir.png",
     rarity: "Common"
+  },
+  {
+    name: "Impractical Joker",
+    text: [
+      "{X:mult,C:white}X3{} Mult if {C:attention}poker hand{}",
+      "is a {C:attention}High Card{},",
+      "poker hand changes",
+      "on every scoring"
+    ],
+    image_url: "assets/1x/j_impractical.png",
+    rarity: "Uncommon"
   },
   {
     name: "Makeshift Joker",
