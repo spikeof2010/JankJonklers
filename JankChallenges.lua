@@ -36,7 +36,7 @@ function SMODS.INIT.JankChallenges ()
         },
         jokers = {
             {id = 'j_pawn', edition = 'negative', eternal = true},
-            {id = 'j_alchemist'},
+            {id = 'j_scrapper'},
         },
         consumeables = {
         },
