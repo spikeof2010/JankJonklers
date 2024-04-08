@@ -136,8 +136,8 @@ let jokers = [
     name: "Scrapper Joker",
     text: [
       "{C:green}1 in 3{} chance to create a",
-      "random {C:attention}Planet{} card when you",
-      "discard five {C:attention}numbered{} cards"
+      "random {C:attention}Planet{} card when",
+      "you discard five {C:attention}numbered{} cards"
     ],
     image_url: "assets/1x/j_scrapper.png",
     rarity: "Common"
@@ -222,6 +222,17 @@ let jokers = [
     ],
     image_url: "assets/1x/j_chicken_scratch.png",
     rarity: "Common"
+  },
+  {
+    name: "Wanted Poster",
+    text: [
+      "Gain {C:attention}$10{} when you",
+      "beat a {C:attention}Blind{} first hand.",
+      "Lose {C:attention}$2{} when you play",
+      "a hand past your first"
+    ],
+    image_url: "assets/1x/j_wanted_poster.png",
+    rarity: "Uncommon"
   },
   {
     name: "Suspicous Vase",
