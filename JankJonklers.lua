@@ -36,6 +36,7 @@ local config = {
     j_suspicious_vase = true,
     j_mural_menace = true,
     j_chicken_scratch = true,
+    j_chalk_outline = true,
 }
 -- thank you mika for this code!!!
 local function init_joker(joker, no_sprite)
@@ -466,8 +467,8 @@ function SMODS.INIT.JankJonklersMod()
             loc = {
                 name = "Makeshift Joker",
                 text = {
-                    "Gains {C:mult}+1{} Mult per",
-                    "{C:attention}card{} sold",
+                    "This Joker gains {C:mult}+1{} Mult",
+                    "per {C:attention}card{} sold",
                     "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult)"
                 }
             },
@@ -864,7 +865,7 @@ function SMODS.INIT.JankJonklersMod()
         -- Calculate
         SMODS.Jokers.j_old_man.calculate = function(self, context)
             if context.setting_blind and not self.getting_sliced then
-                if context.blueprint then
+                if not context.blueprint then
                     G.E_MANAGER:add_event(Event({
                         func = (function()
                             add_tag(Tag('tag_ethereal'))
@@ -1095,9 +1096,9 @@ function SMODS.INIT.JankJonklersMod()
             loc = {
                 name = "Cut the Cheese",
                 text = {
-                    "{X:mult,C:white}X1.5{} Mult during",
-                    "{C:attention}Boss Blinds{} or",
-                    "or your {C:attention}final hand{}"
+                    "When {C:attention}Blind{} is selected",
+                    "create a random {C:attention}Food Joker{}",
+                    "{C:inactive}(Must have room){}"
                 }
             },
             ability_name = "Cut the Cheese",
@@ -1313,8 +1314,8 @@ function SMODS.INIT.JankJonklersMod()
             loc = {
                 name = "Chicken Scratch",
                 text = {
-                    "Gains {C:chips}+5{} Chips if",
-                    "scoring hand contains",
+                    "This Joker gains {C:chips}+5{} Chips",
+                    "if scoring hand contains",
                     "an {C:attention}8{}, {C:attention}7{}, or {C:attention}3{}",
                     "{C:inactive}(Currently {C:chips}+#1#{C:inactive} Chips){}"
                 }
@@ -1363,6 +1364,56 @@ function SMODS.INIT.JankJonklersMod()
                     message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
                     chip_mod = self.ability.extra.chips,
                     colour = G.C.CHIPS
+                }
+            end
+        end
+    end
+
+    -- Chalk Outline
+    if config.j_chalk_outline then
+        -- Create Joker
+        local chalk_outline = {
+            loc = {
+                name = "Chalk Outline",
+                text = {
+                    "This Joker gains {C:mult}+6{} Mult",
+                    "whenever you play",
+                    "your {C:attention}final hand{}",
+                    "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult){}"
+                }
+            },
+            ability_name = "Chalk Outline",
+            slug = "chalk_outline",
+            ability = {
+                extra = {
+                    mult = 0,
+                }
+            },
+            rarity = 1,
+            cost = 5,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+        -- Initialize Joker
+        init_joker(chalk_outline)
+        -- Set local variables
+        function SMODS.Jokers.j_chalk_outline.loc_def(card)
+            return { card.ability.extra.mult }
+        end
+        -- Calculate
+        SMODS.Jokers.j_chalk_outline.calculate = function(self, context)
+            if context.joker_main and context.cardarea == G.jokers then
+                if G.GAME.current_round.hands_left == 0 then
+                    self.ability.extra.mult = self.ability.extra.mult + 6
+                    G.E_MANAGER:add_event(Event({
+                        func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')}); return true
+                        end}))
+                end
+                return {
+                    message = localize{type='variable',key='a_mult',vars={self.ability.extra.mult}},
+                    mult_mod = self.ability.extra.mult
                 }
             end
         end
