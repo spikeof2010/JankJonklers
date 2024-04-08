@@ -1,5 +1,39 @@
 let jokers = [
   {
+    name: "Fortuno",
+    text: [
+      "Whenever you score a",
+      "{C:attention}numbered card{} in your",
+      "first hand each round,",
+      "destroy it and gain {C:attention}$3{}"
+    ],
+    image_url: "assets/1x/j_fortuno.png",
+    rarity: "Legendary",
+    soul: true
+  },
+  {
+    name: "Feste",
+    text: [
+      "Upgrade the first hand",
+      "you play each {C:attention}Boss Blind{}",
+      "by {C:attention}4{} levels"
+    ],
+    image_url: "assets/1x/j_feste.png",
+    rarity: "Legendary",
+    soul: true
+  },
+  {
+    name: "Stańczyk",
+    text: [
+      "Retrigger {C:attention}Enhanced Cards{}",
+      "that are played or",
+      "held in hand"
+    ],
+    image_url: "assets/1x/j_stanczyk.png",
+    rarity: "Legendary",
+    soul: true
+  },  
+  {
     name: "Devilish Joker",
     text: [
       "{X:mult,C:white}X3{} Mult if played",
@@ -21,13 +55,12 @@ let jokers = [
     rarity: "Rare"
   },
   {
-    name: "Mind Mage",
+    name: "Mural Menace",
     text: [
-      "{C:attention}+3{} hand size",
-      "Discard the 2 leftmost",
-      "cards per hand played"
+      "Create a random {C:attention}Tag{}",
+      "when you skip a {C:attention}Blind{}"
     ],
-    image_url: "assets/1x/j_mind_mage.png",
+    image_url: "assets/1x/j_mural_menace.png",
     rarity: "Uncommon"
   },
   {
@@ -59,37 +92,6 @@ let jokers = [
     ],
     image_url: "assets/1x/j_old_man.png",
     rarity: "Rare"
-  },
-  {
-    name: "Fortuno",
-    text: [
-      "Whenever you score a",
-      "{C:attention}numbered card{} in your",
-      "first hand each round,",
-      "destroy it and gain {C:attention}$3{}"
-    ],
-    image_url: "assets/1x/j_fortuno.png",
-    rarity: "Legendary"
-  },
-  {
-    name: "Feste",
-    text: [
-      "Upgrade the first hand",
-      "you play each {C:attention}Boss Blind{}",
-      "by {C:attention}4{} levels"
-    ],
-    image_url: "assets/1x/j_feste.png",
-    rarity: "Legendary"
-  },
-  {
-    name: "Stańczyk",
-    text: [
-      "Retrigger {C:attention}Enhanced Cards{}",
-      "that are played or",
-      "held in hand"
-    ],
-    image_url: "assets/1x/j_stanczyk.png",
-    rarity: "Legendary"
   },
   {
     name: "Box of Stuff",
@@ -211,6 +213,17 @@ let jokers = [
     rarity: "Common"
   },
   {
+    name: "Chicken Scratch",
+    text: [
+      "Gains {C:chips}+5{} Chips if",
+      "scoring hand contains",
+      "an {C:attention}8{}, {C:attention}7{}, or {C:attention}3{}",
+      "{C:inactive}(Currently {C:chips}+20{C:inactive} Chips){}"
+    ],
+    image_url: "assets/1x/j_chicken_scratch.png",
+    rarity: "Common"
+  },
+  {
     name: "Suspicous Vase",
     text: [
       "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
@@ -220,6 +233,34 @@ let jokers = [
     image_url: "assets/1x/j_suspicious_vase.png",
     rarity: "Uncommon"
   }
+]
+
+// works the same. 
+let consumables = [
+  // {
+  //   name: "Joker",
+  //   text: [
+  //     "{C:mult}+4{} Mult"
+  //   ],
+  //   image_url: "img/j_joker.png",
+  //   rarity: "Tarot"
+  // },
+  // {
+  //   name: "Joker",
+  //   text: [
+  //     "{C:mult}+4{} Mult"
+  //   ],
+  //   image_url: "img/j_joker.png",
+  //   rarity: "Planet"
+  // },
+  // {
+  //   name: "Joker",
+  //   text: [
+  //     "{C:mult}+4{} Mult"
+  //   ],
+  //   image_url: "img/j_joker.png",
+  //   rarity: "Spectral"
+  // },
 ]
 
 let cols = {
@@ -249,8 +290,9 @@ let cols = {
   VOUCHER: "#cb724c",
   BOOSTER: "#646eb7",
   EDITION: "#ffffff",
-  DARK_EDITION: "#000000",
+  DARK_EDITION: "#5d5dff",
   ETERNAL: "#c75985",
+  INACTIVE: "#ffffff99",
   DYN_UI: {
     MAIN: "#374244",
     DARK: "#374244",
@@ -302,7 +344,13 @@ let rarities = {
   "Common": "#009dff", 
   "Uncommon": "#4BC292",
   "Rare": "#fe5f55",
-  "Legendary": "#b26cbb"
+  "Legendary": "#b26cbb",
+  "Joker": "#708b91",
+  "Tarot": "#a782d1",
+  "Planet": "#13afce",
+  "Spectral": "#4584fa",
+  "Voucher": "#fd682b",
+  "Edition": "#4ca893",
 }
 
 regex = /{([^}]+)}/g;
@@ -335,12 +383,78 @@ for (let joker of jokers) {
 
   let joker_div = document.createElement("div");
   joker_div.classList.add("joker");
-  joker_div.innerHTML = `
-    <h3>${joker.name}</h3>
-    <img src="${joker.image_url}" alt="${joker.name}" />
-    <h4 class="rarity" style="background-color: ${rarities[joker.rarity]}">${joker.rarity}</h4>
-    <div class="text">${joker.text}</div>
-  `;
+  if (joker.soul) {
+    joker_div.innerHTML = `
+      <h3>${joker.name}</h3>
+      <span class="soulholder">
+        <img src="${joker.image_url}" alt="${joker.name}" class="soul-bg" />
+        <img src="${joker.image_url}" alt="${joker.name}" class="soul-top" />
+      </span>
+      <h4 class="rarity" style="background-color: ${rarities[joker.rarity]}">${joker.rarity}</h4>
+      <div class="text">${joker.text}</div>
+    `;
+  } else {
+    joker_div.innerHTML = `
+      <h3>${joker.name}</h3>
+      <img src="${joker.image_url}" alt="${joker.name}" />
+      <h4 class="rarity" style="background-color: ${rarities[joker.rarity]}">${joker.rarity}</h4>
+      <div class="text">${joker.text}</div>
+    `;
+  }
 
   jokers_div.appendChild(joker_div);
+}
+
+if (consumables.length === 0) {
+  document.querySelector(".consumableshidebydefault").style.display = "none"
+}
+
+let consumables_div = document.querySelector(".consumables");
+
+for (let consumable of consumables) {
+  console.log("adding consumable", consumable.name);
+
+  consumable.text = consumable.text.map((line) => { return line + "{}"});
+
+  consumable.text = consumable.text.join("<br/>");
+  consumable.text = consumable.text.replaceAll("{}", "</span>");
+  consumable.text = consumable.text.replace(regex, function replacer(match, p1, offset, string, groups) {
+    let classes = p1.split(",");
+
+    let css_styling = "";
+
+    for (let i = 0; i < classes.length; i++) {
+      let parts = classes[i].split(":");
+      if (parts[0] === "C") {
+        css_styling += `color: ${cols[parts[1].toUpperCase()]};`;
+      } else if (parts[0] === "X") {
+        css_styling += `background-color: ${cols[parts[1].toUpperCase()]}; border-radius: 5px; padding: 0 5px;`;
+      }
+    }
+
+    return `</span><span style='${css_styling}'>`;
+  });
+
+  let consumable_div = document.createElement("div");
+  consumable_div.classList.add("joker");
+  if (consumable.soul) {
+    consumable_div.innerHTML = `
+      <h3>${consumable.name}</h3>
+      <span class="soulholder">
+        <img src="${consumable.image_url}" alt="${consumable.name}" class="soul-bg" />
+        <img src="${consumable.image_url}" alt="${consumable.name}" class="soul-top" />
+      </span>
+      <h4 class="rarity" style="background-color: ${rarities[consumable.rarity]}">${consumable.rarity}</h4>
+      <div class="text">${consumable.text}</div>
+    `;
+  } else {
+    consumable_div.innerHTML = `
+      <h3>${consumable.name}</h3>
+      <img src="${consumable.image_url}" alt="${consumable.name}" />
+      <h4 class="rarity" style="background-color: ${rarities[consumable.rarity]}">${consumable.rarity}</h4>
+      <div class="text">${consumable.text}</div>
+    `;
+  }
+
+  consumables_div.appendChild(consumable_div);
 }

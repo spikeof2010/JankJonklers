@@ -40,7 +40,7 @@ h1 {
   margin-bottom: 1rem;
 }
 
-.jokers {
+.jokers, .consumables {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
   gap: 1rem;
@@ -56,9 +56,6 @@ h1 {
 
   background-color: #374244;
 }
-.joker .text {
-  font-size: 1.25rem;
-}
 .joker img {
   height: 190px;
   image-rendering: pixelated;
@@ -71,6 +68,7 @@ h1 {
   border: 2px solid white;
   border-radius: 1rem;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .rarity {
@@ -78,12 +76,32 @@ h1 {
   border-radius: 8px;
   padding: 8px;
 }
-
-#gettemp {
-  background-color: #374244;
-  color: white;
-  padding: 0.5rem;
-  border: 1px solid white;
-  border-radius: 0.5rem;
-  cursor: pointer;
+.soulholder {
+  width: 142px;
+  height: 190px;
+  position: relative;
+}
+.soulholder img {
+  position: absolute;
+}
+@keyframes soul-rotate {
+  from {transform: rotateZ(-3deg)}
+  to {transform: rotateZ(3deg)}
+}
+.soul-top {
+  width: 142px;
+  object-fit: cover;
+  object-position: right;
+  top: 0;
+  left: 0;
+  filter: drop-shadow(0px 0px 5px #4f6367);
+  animation: soul-rotate 15s ease-in-out infinite alternate;
+  animation-delay: -7.5s
+}
+.soul-bg {
+  width: 142px;
+  object-fit: cover;
+  object-position: left;
+  top: 0;
+  left: 0;
 }
