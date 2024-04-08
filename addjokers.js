@@ -235,11 +235,22 @@ let jokers = [
     rarity: "Uncommon"
   },
   {
+    name: "Chalk Outline",
+    text: [
+      "Gain {C:attention}$10{} when you",
+      "beat a {C:attention}Blind{} first hand.",
+      "Lose {C:attention}$2{} when you play",
+      "a hand past your first"
+    ],
+    image_url: "assets/1x/j_chalk_outline.png",
+    rarity: "Common"
+  },
+  {
     name: "Suspicous Vase",
     text: [
       "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
-      "become {C:attention}Glass Cards{}",
-      "when played."
+      "become {C:attention}Glass Cards{} and",
+      "give {X:mult,C:white}X2{} Mult when played."
     ],
     image_url: "assets/1x/j_suspicious_vase.png",
     rarity: "Uncommon"
