@@ -489,7 +489,7 @@ function SMODS.INIT.JankJonklersMod()
         init_joker(makeshift)
         -- Set local variables
         function SMODS.Jokers.j_makeshift.loc_def(card)
-            return { card.ability.extra.mult }
+            return { card.ability.mult }
         end
         -- Calculate
         SMODS.Jokers.j_makeshift.calculate = function(self, context)
@@ -946,9 +946,8 @@ function SMODS.INIT.JankJonklersMod()
             loc = {
                 name = "Expanded Art Joker",
                 text = {
-                    "{X:mult,C:white}X1.5{} Mult during",
-                    "{C:attention}Boss Blinds{} or",
-                    "or your {C:attention}final hand{}"
+                    "{C:attention}Enhanced Cards{} gives",
+                    "{C:chips}+30{} Chips when scored"
                 }
             },
             ability_name = "Expanded Art Joker",
@@ -1243,7 +1242,7 @@ function SMODS.INIT.JankJonklersMod()
                         end
                     }))
                     return {
-                        x_mult = self.ability.extra,
+                        x_mult = self.ability.extra.x_mult,
                         card = self
                     } 
                 end
