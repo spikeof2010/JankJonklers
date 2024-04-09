@@ -240,7 +240,7 @@ let jokers = [
       "This Joker gains {C:mult}+6{} Mult",
       "whenever you play",
       "your {C:attention}final hand{}",
-      "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult){}"
+      "{C:inactive}(Currently {C:mult}+0{C:inactive} Mult){}"
     ],
     image_url: "assets/1x/j_chalk_outline.png",
     rarity: "Common"
