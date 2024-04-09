@@ -237,10 +237,10 @@ let jokers = [
   {
     name: "Chalk Outline",
     text: [
-      "Gain {C:attention}$10{} when you",
-      "beat a {C:attention}Blind{} first hand.",
-      "Lose {C:attention}$2{} when you play",
-      "a hand past your first"
+      "This Joker gains {C:mult}+6{} Mult",
+      "whenever you play",
+      "your {C:attention}final hand{}",
+      "{C:inactive}(Currently {C:mult}+#1#{C:inactive} Mult){}"
     ],
     image_url: "assets/1x/j_chalk_outline.png",
     rarity: "Common"
