@@ -10,10 +10,12 @@
 ------------MOD CODE -------------------------
 
 --add mind mage after you rework it, dummy!
+-- jevil does nothing! yet
 local config = {
     j_fortuno = true,
     j_stanczyk = true,
     j_feste = true,
+    j_jevil = false,
     j_sir = true,
     j_devilish = true,
     j_impractical = true,
@@ -37,6 +39,8 @@ local config = {
     j_mural_menace = true,
     j_chicken_scratch = true,
     j_chalk_outline = true,
+    j_boredom_slayer = true,
+    j_cardslinger = true,
 }
 -- thank you mika for this code!!!
 local function init_joker(joker, no_sprite)
@@ -128,9 +132,9 @@ function SMODS.INIT.JankJonklersMod()
                     card = self
                 }
             elseif context.end_of_round then
-                if not context.blueprint then
+                if not context.blueprint and not context.repetition then
                     for i = 1, #self.ability.extra.trash_list do
-                        self.ability.extra.trash_list[i]:start_dissolve()
+                        self.ability.extra.trash_list[i]:start_dissolve(nil, true, 0, true)
                     end
                     self.ability.extra.trash_list = {}
                 end
@@ -153,7 +157,7 @@ function SMODS.INIT.JankJonklersMod()
             slug = "stanczyk",
             ability = {
                 extra = {
-                    extra = 1,
+                    loop_amount = 1,
                 },
             },
             rarity = 4,
@@ -168,28 +172,26 @@ function SMODS.INIT.JankJonklersMod()
         init_joker(stanczyk)
         -- Set local variables
         function SMODS.Jokers.j_stanczyk.loc_def(card)
-            return { card.ability.extra }
+            return { card.ability.extra.loop_amount }
         end
         -- Calculate
         SMODS.Jokers.j_stanczyk.calculate = function(self, context)
-            if context.repetition then
-                if context.cardarea == G.play then
-                    if context.other_card.ability.set == 'Enhanced' then
-                        return {
-                            message = localize('k_again_ex'),
-                            repetitions = self.ability.extra,
-                            card = self
-                        }
-                    end
+            if context.repetition and context.cardarea == G.play then
+                if context.other_card.ability.set == 'Enhanced' and not context.other_card.debuff then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = 1,
+                        card = self
+                    }
                 end
-                if context.cardarea == G.hand then
-                    if (next(context.card_effects[1]) or #context.card_effects > 1) and context.other_card.ability.set == 'Enhanced' then
-                        return {
-                            message = localize('k_again_ex'),
-                            repetitions = self.ability.extra,
-                            card = self
-                        }
-                    end
+            end
+            if context.repetition and context.cardarea == G.hand then
+                if context.other_card.ability.set == 'Enhanced' and (next(context.card_effects[1]) or #context.card_effects > 1) and not context.other_card.debuff then
+                    return {
+                        message = localize('k_again_ex'),
+                        repetitions = 1,
+                        card = self
+                    }
                 end
             end
         end
@@ -229,6 +231,51 @@ function SMODS.INIT.JankJonklersMod()
         end
         -- Calculate
         SMODS.Jokers.j_feste.calculate = function(self, context)
+            if context.before then
+                if G.GAME.current_round.hands_played == 0 and G.GAME.blind.boss then
+                    level_up_hand(self, context.scoring_name, false, 4)
+                    return {
+                        card = self,
+                        message = localize('k_level_up_ex')
+                    }
+                end
+            end
+        end
+    end
+
+    -- Jevil
+    if config.j_jevil then
+        local jevil = {
+            loc = {
+                name = "Jevil",
+                text = {
+                    "{C:attention}Straight Flushes{} give",
+                    "{C:chips}+1{} Chips when scored"
+                }
+            },
+            ability_name = "Jevil",
+            slug = "jevil",
+            ability = {
+                extra = {
+                    extra = 4,
+                },
+            },
+            rarity = 4,
+            cost = 20,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true,
+            soul_pos = { x = 1, y = 0 }
+        }
+        -- Initialize Joker
+        init_joker(jevil)
+        -- Set local variables
+        function SMODS.Jokers.j_jevil.loc_def(card)
+            return { card.ability.extra }
+        end
+        -- Calculate
+        SMODS.Jokers.j_jevil.calculate = function(self, context)
             if context.before then
                 if G.GAME.current_round.hands_played == 0 and G.GAME.blind.boss then
                     level_up_hand(self, context.scoring_name, false, 4)
@@ -914,7 +961,7 @@ function SMODS.INIT.JankJonklersMod()
         -- Calculate
         SMODS.Jokers.j_box_of_stuff.calculate = function(self, context)
             if context.setting_blind and not self.getting_sliced then
-                if context.blueprint then
+                if context.blueprint and context.blind.boss then
                     G.E_MANAGER:add_event(Event({
                         func = (function()
                             add_tag(Tag('tag_standard'))
@@ -1169,7 +1216,7 @@ function SMODS.INIT.JankJonklersMod()
                 }
             },
             rarity = 3,
-            cost = 8,
+            cost = 10,
             unlocked = true,
             discovered = true,
             blueprint_compat = false,
@@ -1419,6 +1466,111 @@ function SMODS.INIT.JankJonklersMod()
         end
     end
 
+
+    -- Boredom Slayer
+    if config.j_boredom_slayer then
+        -- Create Joker
+        local boredom_slayer = {
+            loc = {
+                name = "Boredom Slayer",
+                text = {
+                    "Reduce {C:attention}Blind{} requirements",
+                    "by {C:attention}10%{} whenever you",
+                    "play a hand",
+                }
+            },
+            ability_name = "Boredom Slayer",
+            slug = "boredom_slayer",
+            ability = {
+                extra = {
+                    reduction = 0.9
+                }
+            },
+            rarity = 3,
+            cost = 8,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+        -- Initialize Joker
+        init_joker(boredom_slayer)
+        -- Set local variables
+        function SMODS.Jokers.j_boredom_slayer.loc_def(card)
+            return { card.ability.extra.reduction }
+        end
+        -- Calculate
+        SMODS.Jokers.j_boredom_slayer.calculate = function(self, context)
+            if context.joker_main and context.cardarea == G.jokers then
+                G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                    G.GAME.blind.chips = math.floor(G.GAME.blind.chips * 0.9)
+                    G.GAME.blind.chip_text = number_format(G.GAME.blind.chips)
+                    
+                    local chips_UI = G.hand_text_area.blind_chips
+                    G.FUNCS.blind_chip_UI_scale(G.hand_text_area.blind_chips)
+                    G.HUD_blind:recalculate() 
+                    chips_UI:juice_up()
+            
+                    if not silent then play_sound('chips2') end
+                    return true end }))
+            end
+        end
+    end
+
+    -- Cardslinger
+    if config.j_cardslinger then
+        -- Create Joker
+        local cardslinger = {
+            loc = {
+                name = "Cardslinger",
+                text = {
+                    "{C:chips}+10{} Chips for each",
+                    "time a card scored",
+                    "this hand"
+                }
+            },
+            ability_name = "Cardslinger",
+            slug = "cardslinger",
+            ability = {
+                extra = {
+                    trigger_count = 0,
+                    chips = 10,
+                    clear_cache = false,
+                }
+            },
+            rarity = 1,
+            cost = 4,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+        -- Initialize Joker
+        init_joker(cardslinger)
+        -- Set local variables
+        function SMODS.Jokers.j_cardslinger.loc_def(card)
+            return { card.ability.extra.chips }
+        end
+        -- Calculate
+        SMODS.Jokers.j_cardslinger.calculate = function(self, context)
+            if context.individual and context.cardarea == G.play then
+                if self.ability.extra.clear_cache then
+                    self.ability.extra.trigger_count = 0
+                    self.ability.extra.clear_cache = false
+                end
+                self.ability.extra.trigger_count = self.ability.extra.trigger_count + 1
+            end
+            if context.joker_main and context.cardarea == G.jokers then
+                self.ability.extra.clear_cache = true
+                self.ability.extra.chips = 10 * self.ability.extra.trigger_count
+                return {
+                    message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
+                    chip_mod = self.ability.extra.chips,
+                    colour = G.C.CHIPS
+                }
+            end
+        end
+    end
 
     -- Sir Joker
     if config.j_sir then

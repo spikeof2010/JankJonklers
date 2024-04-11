@@ -246,6 +246,26 @@ let jokers = [
     rarity: "Common"
   },
   {
+    name: "Boredom Slayer",
+    text: [
+      "Reduce {C:attention}Blind{} requirements",
+      "by {C:attention}10%{} whenever you",
+      "play a hand",
+    ],
+    image_url: "assets/1x/j_boredom_slayer.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Cardslinger",
+    text: [
+      "{C:chips}+10{} Chips for each",
+      "time a card scored",
+      "this hand"
+    ],
+    image_url: "assets/1x/j_cardslinger.png",
+    rarity: "Common"
+  },
+  {
     name: "Suspicous Vase",
     text: [
       "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
