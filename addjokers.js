@@ -266,6 +266,16 @@ let jokers = [
     rarity: "Common"
   },
   {
+    name: "Pitiful Joker",
+    text: [
+      "{C:mult}+10{} Mult if",
+      "played hand is a",
+      "{C:attention}High Card{} or {C:attention}Pair{}"
+    ],
+    image_url: "assets/1x/j_pitiful.png",
+    rarity: "Common"
+  },
+  {
     name: "Suspicous Vase",
     text: [
       "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
