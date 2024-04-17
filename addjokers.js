@@ -32,6 +32,19 @@ let jokers = [
     image_url: "assets/1x/j_stanczyk.png",
     rarity: "Legendary",
     soul: true
+  },
+  {
+    name: "Midnight Crew",
+    text: [
+      "This Joker gains {X:mult,C:white} X0.5 {}",
+      "Mult if scoring hand contains a {C:attention}Flush{}",
+      "{C:attention}of{} {C:clubs}Clubs{}. Changes",
+      "suit after every blind",
+      "{C:inactive}(Currently {X:mult,C:white}X1{C:inactive})"
+    ],
+    image_url: "assets/1x/j_midnight_crew.png",
+    rarity: "Legendary",
+    soul: true
   },  
   {
     name: "Devilish Joker",
@@ -49,7 +62,7 @@ let jokers = [
       "When {C:attention}Boss Blind{} is selected",
       "gain {X:mult,C:white}X0.5{} Mult, then",
       "set your {C:attention}money{} to {C:attention}$0{}",
-      "{C:inactive}(Currently {X:mult,C:white}x1{C:inactive})"
+      "{C:inactive}(Currently {X:mult,C:white}X1{C:inactive})"
     ],
     image_url: "assets/1x/j_devoted.png",
     rarity: "Rare"
@@ -274,6 +287,29 @@ let jokers = [
     ],
     image_url: "assets/1x/j_pitiful.png",
     rarity: "Common"
+  },
+  {
+    name: "Sunday Funnies",
+    text: [
+      "Create a random {C:planet}Planet{}",
+      "or {C:tarot}Tarot{} card per 2",
+      "{C:attention}rerolls{} in the shop",
+      "{C:inactive}({C:green}2{}{C:inactive} rerolls left){}",
+      "{C:inactive}(Must have room){}",
+    ],
+    image_url: "assets/1x/j_sunday_funnies.png",
+    rarity: "Common"
+  },
+  {
+    name: "Self Portrait",
+    text: [
+      "This Joker gains {X:mult,C:white}X0.1{}",
+      "Mult whenever you {C:attention}use a Tarot card{}.",
+      "Changes every blind.",
+      "{C:inactive}(Currently {X:mult,C:white}X1{}{C:inactive} Mult){}"
+    ],
+    image_url: "assets/1x/j_self_portrait.png",
+    rarity: "Rare"
   },
   {
     name: "Suspicous Vase",
