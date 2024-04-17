@@ -45,17 +45,18 @@ let jokers = [
     image_url: "assets/1x/j_midnight_crew.png",
     rarity: "Legendary",
     soul: true
-  },  
-  {
-    name: "Devilish Joker",
-    text: [
-      "{X:mult,C:white}X3{} Mult if played",
-      "hand contains only {C:attention}6s{}",
-      "or {C:attention}Gold Cards{}"
-    ],
-    image_url: "assets/1x/j_devilish.png",
-    rarity: "Uncommon"
   },
+  {
+    name: "Self Portrait",
+    text: [
+      "This Joker gains {X:mult,C:white}X0.1{}",
+      "Mult whenever you {C:attention}use a Tarot card{}.",
+      "Changes every blind.",
+      "{C:inactive}(Currently {X:mult,C:white}X1{}{C:inactive} Mult){}"
+    ],
+    image_url: "assets/1x/j_self_portrait.png",
+    rarity: "Rare"
+  },  
   {
     name: "Devoted Joker",
     text: [
@@ -68,12 +69,112 @@ let jokers = [
     rarity: "Rare"
   },
   {
+    name: "Old Man Joker",
+    text: [
+      "When {C:attention}Boss Blind{} is selected",
+      "create a free {C:attention}Ethereal Tag{}"
+    ],
+    image_url: "assets/1x/j_old_man.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Lieutenant Joker",
+    text: [
+      "After you play a {C:attention}High Card{}",
+      "increase the {C:attention}rank{}",
+      "of each card played."
+    ],
+    image_url: "assets/1x/j_lieutenant.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Shady Dealer",
+    text: [
+      "Sell this card to create",
+      "a free {C:attention}Negative Tag{}"
+    ],
+    image_url: "assets/1x/j_shady_dealer.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Cut the Cheese",
+    text: [
+      "When {C:attention}Blind{} is selected",
+      "create a random {C:attention}Food Joker{}",
+      "{C:inactive}(Must have room){}"
+    ],
+    image_url: "assets/1x/j_cut_the_cheese.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Boredom Slayer",
+    text: [
+      "Reduce {C:attention}Blind{} requirements",
+      "by {C:attention}10%{} whenever you",
+      "play a hand",
+    ],
+    image_url: "assets/1x/j_boredom_slayer.png",
+    rarity: "Rare"
+  },
+  {
+    name: "Devilish Joker",
+    text: [
+      "{X:mult,C:white}X3{} Mult if played",
+      "hand contains only {C:attention}6s{}",
+      "or {C:attention}Gold Cards{}"
+    ],
+    image_url: "assets/1x/j_devilish.png",
+    rarity: "Uncommon"
+  },
+  {
     name: "Mural Menace",
     text: [
       "Create a random {C:attention}Tag{}",
       "when you skip a {C:attention}Blind{}"
     ],
     image_url: "assets/1x/j_mural_menace.png",
+    rarity: "Uncommon"
+  },
+  {
+    name: "Impractical Joker",
+    text: [
+      "{X:mult,C:white}X3{} Mult if {C:attention}poker hand{}",
+      "is a {C:attention}High Card{},",
+      "poker hand changes",
+      "on every scoring"
+    ],
+    image_url: "assets/1x/j_impractical.png",
+    rarity: "Uncommon"
+  },
+  {
+    name: "Box of Stuff",
+    text: [
+      "When {C:attention}Boss Blind{} is selected",
+      "create three free {C:attention}Standard Tags{},",
+      "then destroy this card"
+    ],
+    image_url: "assets/1x/j_box_of_stuff.png",
+    rarity: "Uncommon"
+  },
+  {
+    name: "Wanted Poster",
+    text: [
+      "Gain {C:attention}$10{} when you",
+      "beat a {C:attention}Blind{} first hand.",
+      "Lose {C:attention}$2{} when you play",
+      "a hand past your first"
+    ],
+    image_url: "assets/1x/j_wanted_poster.png",
+    rarity: "Uncommon"
+  },
+  {
+    name: "Suspicous Vase",
+    text: [
+      "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
+      "become {C:attention}Glass Cards{} and",
+      "give {X:mult,C:white}X2{} Mult when played."
+    ],
+    image_url: "assets/1x/j_suspicious_vase.png",
     rarity: "Uncommon"
   },
   {
@@ -98,25 +199,6 @@ let jokers = [
     rarity: "Common"
   },
   {
-    name: "Old Man Joker",
-    text: [
-      "When {C:attention}Boss Blind{} is selected",
-      "create a free {C:attention}Ethereal Tag{}"
-    ],
-    image_url: "assets/1x/j_old_man.png",
-    rarity: "Rare"
-  },
-  {
-    name: "Box of Stuff",
-    text: [
-      "When {C:attention}Boss Blind{} is selected",
-      "create three free {C:attention}Standard Tags{},",
-      "then destroy this card"
-    ],
-    image_url: "assets/1x/j_box_of_stuff.png",
-    rarity: "Uncommon"
-  },
-  {
     name: "Expanded Art Joker",
     text: [
       "{C:attention}Enhanced Cards{} gives",
@@ -136,16 +218,6 @@ let jokers = [
     rarity: "Common"
   },
   {
-    name: "Lieutenant Joker",
-    text: [
-      "After you play a {C:attention}High Card{}",
-      "increase the {C:attention}rank{}",
-      "of each card played."
-    ],
-    image_url: "assets/1x/j_lieutenant.png",
-    rarity: "Rare"
-  },
-  {
     name: "Scrapper Joker",
     text: [
       "{C:green}1 in 3{} chance to create a",
@@ -156,25 +228,6 @@ let jokers = [
     rarity: "Common"
   },
   {
-    name: "Shady Dealer",
-    text: [
-      "Sell this card to create",
-      "a free {C:attention}Negative Tag{}"
-    ],
-    image_url: "assets/1x/j_shady_dealer.png",
-    rarity: "Rare"
-  },
-  {
-    name: "Cut the Cheese",
-    text: [
-      "When {C:attention}Blind{} is selected",
-      "create a random {C:attention}Food Joker{}",
-      "{C:inactive}(Must have room){}"
-    ],
-    image_url: "assets/1x/j_cut_the_cheese.png",
-    rarity: "Rare"
-  },
-  {
     name: "Sir Joker",
     text: [
       "{X:mult,C:white}X1.5{} Mult during",
@@ -183,17 +236,6 @@ let jokers = [
     ],
     image_url: "assets/1x/j_sir.png",
     rarity: "Common"
-  },
-  {
-    name: "Impractical Joker",
-    text: [
-      "{X:mult,C:white}X3{} Mult if {C:attention}poker hand{}",
-      "is a {C:attention}High Card{},",
-      "poker hand changes",
-      "on every scoring"
-    ],
-    image_url: "assets/1x/j_impractical.png",
-    rarity: "Uncommon"
   },
   {
     name: "Makeshift Joker",
@@ -237,17 +279,6 @@ let jokers = [
     rarity: "Common"
   },
   {
-    name: "Wanted Poster",
-    text: [
-      "Gain {C:attention}$10{} when you",
-      "beat a {C:attention}Blind{} first hand.",
-      "Lose {C:attention}$2{} when you play",
-      "a hand past your first"
-    ],
-    image_url: "assets/1x/j_wanted_poster.png",
-    rarity: "Uncommon"
-  },
-  {
     name: "Chalk Outline",
     text: [
       "This Joker gains {C:mult}+6{} Mult",
@@ -257,16 +288,6 @@ let jokers = [
     ],
     image_url: "assets/1x/j_chalk_outline.png",
     rarity: "Common"
-  },
-  {
-    name: "Boredom Slayer",
-    text: [
-      "Reduce {C:attention}Blind{} requirements",
-      "by {C:attention}10%{} whenever you",
-      "play a hand",
-    ],
-    image_url: "assets/1x/j_boredom_slayer.png",
-    rarity: "Rare"
   },
   {
     name: "Cardslinger",
@@ -299,27 +320,6 @@ let jokers = [
     ],
     image_url: "assets/1x/j_sunday_funnies.png",
     rarity: "Common"
-  },
-  {
-    name: "Self Portrait",
-    text: [
-      "This Joker gains {X:mult,C:white}X0.1{}",
-      "Mult whenever you {C:attention}use a Tarot card{}.",
-      "Changes every blind.",
-      "{C:inactive}(Currently {X:mult,C:white}X1{}{C:inactive} Mult){}"
-    ],
-    image_url: "assets/1x/j_self_portrait.png",
-    rarity: "Rare"
-  },
-  {
-    name: "Suspicous Vase",
-    text: [
-      "All {C:attention}2s{}, {C:attention}3s{} and {C:attention}4s{}",
-      "become {C:attention}Glass Cards{} and",
-      "give {X:mult,C:white}X2{} Mult when played."
-    ],
-    image_url: "assets/1x/j_suspicious_vase.png",
-    rarity: "Uncommon"
   }
 ]
 
