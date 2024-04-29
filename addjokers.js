@@ -178,6 +178,17 @@ let jokers = [
     rarity: "Uncommon"
   },
   {
+    name: "Memorable Joker",
+    text: [
+      "This Joker gains {X:mult,C:white}X0.1{} Mult",
+      "for each consecutive played hand",
+      "containing exactly {C:attention}3{} cards",
+      "{C:inactive}(Currently {X:mult,C:white}X1{}{C:inactive} Mult){}"
+    ],
+    image_url: "assets/1x/j_memorable.png",
+    rarity: "Uncommon"
+  },
+  {
     name: "Sentai Joker",
     text: [
       "Gains {C:mult}+8{} Mult per",

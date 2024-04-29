@@ -44,6 +44,7 @@ local config = {
     j_cardslinger = true,
     j_sunday_funnies = true,
     j_self_portrait = true,
+    j_memorable = true,
 }
 -- thank you mika for this code!!!
 local function init_joker(joker, no_sprite)
@@ -1801,13 +1802,13 @@ function SMODS.INIT.JankJonklersMod()
                     func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')}); return true
                     end}))
                 return
-            elseif not context.blueprint and context.cardarea == G.jokers and self.ability.extra.ability_state == 4 and #context.full_hand <= 3 then
+            elseif not context.blueprint and context.cardarea == G.jokers and self.ability.extra.ability_state == 4 and context.full_hand and #context.full_hand <= 3 then
                 self.ability.extra.x_mult = self.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')}); return true
                     end}))
                 return
-            elseif not context.blueprint and context.discard and self.ability.extra.ability_state == 5 and #context.full_hand <= 3 then
+            elseif not context.blueprint and context.discard and self.ability.extra.ability_state == 5 then
                 local face_cards = 0
                 for k, v in ipairs(context.full_hand) do
                     if v:is_face() then face_cards = face_cards + 1 end
@@ -1862,6 +1863,58 @@ function SMODS.INIT.JankJonklersMod()
         end
     end
 
+
+    -- Memorable Joker
+    if config.j_memorable then
+        -- Create Joker
+        local memorable = {
+            loc = {
+                name = "Memorable Joker",
+                text = {
+                    "This Joker gains {X:mult,C:white}X0.1{} Mult",
+                    "for each consecutive played hand",
+                    "containing exactly {C:attention}3{} cards",
+                    "{C:inactive}(Currently {X:mult,C:white}X#1#{}{C:inactive} Mult){}"
+                }
+            },
+            ability_name = "Memorable Joker",
+            slug = "memorable",
+            ability = {
+                extra = {
+                    x_mult = 1
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+        -- Initialize Joker
+        init_joker(memorable)
+        -- Set local variables
+        function SMODS.Jokers.j_memorable.loc_def(card)
+            return { card.ability.extra.x_mult }
+        end
+        -- Calculate
+        SMODS.Jokers.j_memorable.calculate = function(self, context)
+            if context.joker_main and context.cardarea == G.jokers then
+                if context.full_hand and #context.full_hand == 3 then
+                    self.ability.extra.x_mult = self.ability.extra.x_mult + 0.1
+                    return {
+                        message = localize { type = 'variable', key = 'a_xmult', vars = { self.ability.extra.x_mult } },
+                        Xmult_mod = self.ability.extra.x_mult
+                    }
+                end
+                self.ability.extra.x_mult = 1
+                return {
+                    message = localize('k_reset'),
+                    colour = G.C.RED
+                }
+            end
+        end
+    end
 
 
     -- Sir Joker

@@ -1,9 +1,9 @@
 {
     "name": "JankJonklers",
-    "version_number": "0.1.7",
+    "version_number": "0.21",
     "website_url": "https://spikeof2010.github.io/JankJonklers/",
     "description": "Jokers, Jank, and Jchallenges.",
 	"dependencies": [
-        "Steamopollys-Steamodded-0.8.2"
+        "Steamopollys-Steamodded-0.9.8"
     ]
 }
