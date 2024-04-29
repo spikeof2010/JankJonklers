@@ -180,8 +180,8 @@ let jokers = [
   {
     name: "Memorable Joker",
     text: [
-      "This Joker gains {X:mult,C:white}X0.1{} Mult",
-      "for each consecutive played hand",
+      "This Joker gains {X:mult,C:white}X0.1{}",
+      "Mult for each consecutive played hand",
       "containing exactly {C:attention}3{} cards",
       "{C:inactive}(Currently {X:mult,C:white}X1{}{C:inactive} Mult){}"
     ],
