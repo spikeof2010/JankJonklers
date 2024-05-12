@@ -189,6 +189,16 @@ let jokers = [
     rarity: "Uncommon"
   },
   {
+    name: "Tapestry Joker",
+    text: [
+      "This Joker gains {C:mult}+4{} Mult for",
+      "each unique consumable used",
+      "{C:inactive}(Currently {C:mult}+0{}{C:inactive} Mult){}"
+    ],
+    image_url: "assets/1x/j_tapestry.png",
+    rarity: "Uncommon"
+  },
+  {
     name: "Sentai Joker",
     text: [
       "Gains {C:mult}+8{} Mult per",

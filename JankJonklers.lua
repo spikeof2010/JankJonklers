@@ -45,6 +45,7 @@ local config = {
     j_sunday_funnies = true,
     j_self_portrait = true,
     j_memorable = true,
+    j_tapestry = true,
 }
 -- thank you mika for this code!!!
 local function init_joker(joker, no_sprite)
@@ -1022,7 +1023,7 @@ function SMODS.INIT.JankJonklersMod()
                     "then destroy this card"
                 }
             },
-            ability_name = "Sir Joker",
+            ability_name = "Box of Stuff",
             slug = "box_of_stuff",
             ability = {
                 extra = {
@@ -1056,15 +1057,16 @@ function SMODS.INIT.JankJonklersMod()
                             self:juice_up(0.3, 0.4)
                             self.states.drag.is = true
                             self.children.center.pinch.x = true
+                            G.E_MANAGER:add_event(Event({
+                                func = function()
+                                    G.jokers:remove_card(self)
+                                    self:remove()
+                                    self = nil
+                                    return true;
+                                end})) 
                             return true
                         end)
                     }))
-                    G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.3, blockable = false,
-                    func = function()
-                            G.jokers:remove_card(self)
-                            self:remove()
-                            self = nil
-                        return true; end})) 
                 end
             end
         end
@@ -1916,6 +1918,67 @@ function SMODS.INIT.JankJonklersMod()
         end
     end
 
+    -- Tapestry Joker
+    if config.j_tapestry then
+        -- Create Joker
+        local tapestry = {
+            loc = {
+                name = "Tapestry Joker",
+                text = {
+                    "This Joker gains {C:mult}+4{} Mult for",
+                    "each unique consumable used",
+                    "{C:inactive}(Currently {C:mult}+#1#{}{C:inactive} Mult){}"
+                }
+            },
+            ability_name = "Tapestry Joker",
+            slug = "tapestry",
+            ability = {
+                extra = {
+                    mult = 0,
+                    tapestry_list = {},
+                }
+            },
+            rarity = 2,
+            cost = 6,
+            unlocked = true,
+            discovered = true,
+            blueprint_compat = true,
+            eternal_compat = true
+        }
+        -- Initialize Joker
+        init_joker(tapestry)
+        -- Set local variables
+        function SMODS.Jokers.j_tapestry.loc_def(card)
+            return { card.ability.extra.mult }
+        end
+        -- Calculate
+        SMODS.Jokers.j_tapestry.calculate = function(self, context)
+            if context.using_consumeable then
+                local tapestry_list = self.ability.extra.tapestry_list
+                local result = {
+                    id = context.consumeable.ability.order,
+                    set = context.consumeable.ability.set,
+                }
+                for _, item in ipairs(tapestry_list) do
+                    if item.id == result.id and item.set == result.set then
+                        return nil
+                    end
+                end
+                self.ability.extra.mult = self.ability.extra.mult + 4
+                G.E_MANAGER:add_event(Event({
+                    func = function() card_eval_status_text(self, 'extra', nil, nil, nil, {message = localize('k_upgrade_ex')}); return true
+                    end}))
+                return
+                table.insert(tapestry_list, result)
+            end
+            if context.joker_main and context.cardarea == G.jokers and self.ability.extra.mult > 0 then
+                return {
+                    message = localize { type = 'variable', key = 'a_mult', vars = { self.ability.extra.mult } },
+                    mult = self.ability.extra.mult
+                }
+            end
+        end
+    end
 
     -- Sir Joker
     if config.j_sir then
