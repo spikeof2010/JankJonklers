@@ -453,7 +453,7 @@ function SMODS.INIT.JankJonklersMod()
         init_joker(impractical)
         -- Set local variables
         function SMODS.Jokers.j_impractical.loc_def(card)
-            return { card.ability.extra.poker_hand }
+            return { G.localization.misc['poker_hands'][card.ability.extra.poker_hand] }
         end
         -- Calculate
         SMODS.Jokers.j_impractical.calculate = function(self, context)
