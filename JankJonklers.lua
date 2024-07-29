@@ -2023,6 +2023,10 @@ function SMODS.INIT.JankJonklersMod()
         end
     end
 
+    -- JokerDisplay mod support
+    if _G["JokerDisplay"] then
+        NFS.load(SMODS.findModByID("JankJonklersMod").path .. "jokerdisplay_definitions.lua")()
+    end
 
     --end of the loop, dummy, don't go past this
 end
