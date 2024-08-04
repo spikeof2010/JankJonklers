@@ -1900,3 +1900,8 @@ if config.j_jank_sir then
     -- Initialize Joker
     init_joker(sir)
 end
+
+-- JokerDisplay mod support
+if JokerDisplay then
+    SMODS.load_file("JokerDisplay_integration.lua")()
+end
