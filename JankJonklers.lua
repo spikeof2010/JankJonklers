@@ -512,7 +512,7 @@ if config.j_jank_sentai then
                 card.ability.mult = card.ability.mult + card.ability.extra.mult
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                        card_eval_status_text(card, 'extra', nil, nil, nil,
                             { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } } }); return true
                     end
                 }))
@@ -570,7 +570,7 @@ if config.j_jank_makeshift then
                 card.ability.mult = card.ability.mult + card.ability.extra.mult
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil,
+                        card_eval_status_text(card, 'extra', nil, nil, nil,
                             { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } } }); return true
                     end
                 }))
@@ -1373,7 +1373,7 @@ if config.j_jank_chicken_scratch then
             card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_gain
             G.E_MANAGER:add_event(Event({
                 func = function()
-                    card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                 end
             }))
             return {
@@ -1420,7 +1420,7 @@ if config.j_jank_chalk_outline then
                 card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
             end
@@ -1664,7 +1664,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1672,7 +1672,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1681,7 +1681,7 @@ if config.j_jank_self_portrait then
             card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
             G.E_MANAGER:add_event(Event({
                 func = function()
-                    card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                 end
             }))
             return
@@ -1689,7 +1689,7 @@ if config.j_jank_self_portrait then
             card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
             G.E_MANAGER:add_event(Event({
                 func = function()
-                    card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                 end
             }))
             return
@@ -1702,7 +1702,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1712,7 +1712,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1720,7 +1720,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1728,7 +1728,7 @@ if config.j_jank_self_portrait then
                 card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                     end
                 }))
                 return
@@ -1778,7 +1778,7 @@ if config.j_jank_memorable then
     
     -- Set local variables
     function memorable.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult } }
+        return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain } }
     end
 
     -- Calculate
@@ -1845,7 +1845,7 @@ if config.j_jank_tapestry then
             card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
             G.E_MANAGER:add_event(Event({
                 func = function()
-                    card_eval_status_text(self, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
+                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
                 end
             }))
             return
