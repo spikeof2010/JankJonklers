@@ -1151,13 +1151,13 @@ if config.j_jank_cut_the_cheese then
             if not (context.blueprint_card or self).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
                 local jokers_to_create = math.min(1, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))
                 local food_list = {
-                    "j_jank_popcorn",
-                    "j_jank_gros_michel",
-                    "j_jank_ice_cream",
-                    "j_jank_turtle_bean",
-                    "j_jank_ramen",
-                    "j_jank_selzer",
-                    "j_jank_diet_cola"
+                    "j_popcorn",
+                    "j_gros_michel",
+                    "j_ice_cream",
+                    "j_turtle_bean",
+                    "j_ramen",
+                    "j_selzer",
+                    "j_diet_cola"
                 }
                 G.GAME.joker_buffer = G.GAME.joker_buffer + jokers_to_create
                 G.E_MANAGER:add_event(Event({
