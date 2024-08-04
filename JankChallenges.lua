@@ -90,7 +90,7 @@ SMODS.Challenge({
         }
     },
     jokers = {
-        {id = 'j_old_man', eternal = true}
+        {id = 'j_jank_old_man', eternal = true}
     },
     deck = {
         type = 'Challenge Deck'
