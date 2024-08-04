@@ -57,7 +57,7 @@ SMODS.Challenge({
             {id = 'j_rough_gem'},
             {id = 'j_matador'},
             {id = 'j_satellite'},
-            {id = 'j_fortuno'},
+            {id = 'j_jank_fortuno'},
             {id = 'v_clearance_sale'},
             {id = 'v_liquidation'},
             {id = 'v_seed_money'},
