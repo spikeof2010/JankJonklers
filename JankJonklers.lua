@@ -65,7 +65,7 @@ local function init_joker(joker, no_sprite)
 end
 
 local function get_suit(card)
-    if (card.ability.effect == 'Stone Card' or card.config.center.no_rank) and not card.vampired then
+    if (card.ability.effect == 'Stone Card' or card.config.center.no_suit) and not card.vampired then
         return -math.random(100, 100000)
     end
     return card.base.suit
@@ -98,30 +98,29 @@ if config.j_jank_fortuno then
 
     -- Calculate
     fortuno.calculate = function(self, card, context)
-        if context.before and context.cardarea == G.jokers and not context.blueprint and G.GAME.current_round.hands_played == 0 then
-            for k, v in ipairs(context.scoring_hand) do
-                if not (v:is_face() or v:get_id() == 14) then
-                    table.insert(card.ability.extra.trash_list, v)
-                    local card_to_destroy = v
-                    card_to_destroy.getting_sliced = true
-                    card_to_destroy:start_dissolve()
-                    ease_dollars(card.ability.extra.dollars)
-                end
-            end
-            return {
-                message = localize('$') .. card.ability.extra.dollars,
-                colour = G.C.MONEY,
-                delay = 0.45,
-                remove = true,
-                card = card
-            }
+        if context.destroying_card and context.destroying_card.area == G.play and not context.blueprint and G.GAME.current_round.hands_played == 0 then
+			if not (context.destroying_card:is_face() or context.destroying_card:get_id() == 14) then
+				return {
+					message = localize('$') .. card.ability.extra.dollars,
+					colour = G.C.MONEY,
+					delay = 0.45,
+					remove = true,
+					card = card,
+					extra = {
+						func = function()
+							ease_dollars(card.ability.extra.dollars)
+						end
+					},
+				}
+			end
+			--[[
         elseif context.end_of_round then
             if not context.blueprint and not context.repetition then
                 for i = 1, #card.ability.extra.trash_list do
                     card.ability.extra.trash_list[i]:start_dissolve(nil, true, 0, true)
                 end
                 card.ability.extra.trash_list = {}
-            end
+            end--]]
         end
     end
 
