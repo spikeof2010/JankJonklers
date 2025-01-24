@@ -1156,7 +1156,8 @@ if config.j_jank_cut_the_cheese then
                     "j_turtle_bean",
                     "j_ramen",
                     "j_selzer",
-                    "j_diet_cola"
+                    "j_diet_cola",
+					-- "j_egg",
                 }
 				if (SMODS.Mods['ortalab'] or {}).can_load then
 					table.insert(base_food_list, "j_ortalab_fine_wine")
@@ -1164,8 +1165,11 @@ if config.j_jank_cut_the_cheese then
 					table.insert(base_food_list, "j_ortalab_mystery_soda")
 					table.insert(base_food_list, "j_ortalab_popcorn_bag") -- this is Picnic Basket 
 					table.insert(base_food_list, "j_ortalab_salad")
-					table.insert(base_food_list, "j_ortalab_hot_chocolate")
-					table.insert(base_food_list, "j_ortalab_mystery_soda")
+					table.insert(base_food_list, "j_ortalab_taliaferro")
+					--table.insert(base_food_list, "j_ortalab_sunnyside") -- if egg doesnt count this doesnt count either
+				end
+				if (SMODS.Mods['pokermon'] or {}).can_load then
+					table.insert(base_food_list, "j_poke_jelly_donut")
 				end
 				local food_list = {}
 				for _,k in ipairs(base_food_list) do
