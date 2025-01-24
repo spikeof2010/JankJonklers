@@ -296,6 +296,7 @@ return {
             self_portrait_6 = "play a High Card",
             self_portrait_7 = "play a Straight",
             self_portrait_8 = "play a Flush",
+			self_portrait_9 = "score a Glass card",
 		}
 	}
 }

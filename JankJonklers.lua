@@ -482,7 +482,8 @@ if config.j_jank_sentai then
         key = "sentai",
         config = {
             extra = {
-                mult = 8
+                mult = 8,
+				curr_mult = 0
             }
         },
         rarity = 1,
@@ -496,30 +497,29 @@ if config.j_jank_sentai then
     
     -- Set local variables
     function sentai.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.mult, card.ability.extra.mult } }
+        return { vars = { card.ability.extra.curr_mult, card.ability.extra.mult } }
     end
 
     -- Calculate
     sentai.calculate = function(self, card, context)
-        if context.joker_main and context.cardarea == G.jokers and card.ability.mult > 0 then
+        if context.joker_main and context.cardarea == G.jokers and card.ability.extra.curr_mult > 0 then
             return {
-                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } },
-                mult_mod = card.ability.mult + card.ability.extra.mult
+                mult = card.ability.extra.curr_mult
             }
         elseif context.using_consumeable then
             if not context.blueprint and context.consumeable.ability.set == 'Planet' then
-                card.ability.mult = card.ability.mult + card.ability.extra.mult
+                card.ability.extra.curr_mult = card.ability.extra.curr_mult + card.ability.extra.mult
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         card_eval_status_text(card, 'extra', nil, nil, nil,
-                            { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } } }); return true
+                            { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.curr_mult } } }); return true
                     end
                 }))
                 return
             end
         elseif context.end_of_round and not context.blueprint then
-            if G.GAME.blind.boss and card.ability.mult > 1 then
-                card.ability.mult = 0
+            if G.GAME.blind.boss and card.ability.extra.curr_mult > 1 then
+                card.ability.extra.curr_mult = 0
                 return {
                     message = localize('k_reset'),
                     colour = G.C.RED
@@ -1147,9 +1147,9 @@ if config.j_jank_cut_the_cheese then
     -- Calculate
     cut_the_cheese.calculate = function(self, card, context)
         if context.setting_blind then
-            if not (context.blueprint_card or self).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
+            if not (context.blueprint_card or card).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
                 local jokers_to_create = math.min(1, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))
-                local food_list = {
+                local base_food_list = {
                     "j_popcorn",
                     "j_gros_michel",
                     "j_ice_cream",
@@ -1158,6 +1158,22 @@ if config.j_jank_cut_the_cheese then
                     "j_selzer",
                     "j_diet_cola"
                 }
+				if (SMODS.Mods['ortalab'] or {}).can_load then
+					table.insert(base_food_list, "j_ortalab_fine_wine")
+					table.insert(base_food_list, "j_ortalab_hot_chocolate")
+					table.insert(base_food_list, "j_ortalab_mystery_soda")
+					table.insert(base_food_list, "j_ortalab_popcorn_bag") -- this is Picnic Basket 
+					table.insert(base_food_list, "j_ortalab_salad")
+					table.insert(base_food_list, "j_ortalab_hot_chocolate")
+					table.insert(base_food_list, "j_ortalab_mystery_soda")
+				end
+				local food_list = {}
+				for _,k in ipairs(base_food_list) do
+					if not (next(find_joker(G.P_CENTERS[k].name))) then
+						table.insert(food_list, k)
+					end
+				end
+				if #food_list == 0 then food_list = {"j_gros_michel"} end
                 G.GAME.joker_buffer = G.GAME.joker_buffer + jokers_to_create
                 G.E_MANAGER:add_event(Event({
                     func = function()
@@ -1169,7 +1185,7 @@ if config.j_jank_cut_the_cheese then
                         return true
                     end
                 }))
-                card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                     { message = localize('k_plus_joker'), colour = G.C.BLUE })
             end
         end
@@ -1253,14 +1269,16 @@ if config.j_jank_suspicious_vase then
                     return nil
                 end
                 context.other_card:set_ability(G.P_CENTERS.m_glass, nil, true)
+				local other_card = context.other_card
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        context.other_card:juice_up()
+                        other_card:juice_up()
                         return true
                     end
                 }))
                 return {
-                    x_mult = card.ability.extra.x_mult,
+                    Xmult_mod = card.ability.extra.x_mult,
+                    message = localize{type='variable',key='a_xmult',vars={self.ability.extra.x_mult}},
                     card = card
                 }
             end
@@ -1648,6 +1666,9 @@ if config.j_jank_self_portrait then
     
     -- Set local variables
     function self_portrait.loc_vars(self, info_queue, card)
+		if card.ability.extra.ability_state == 9 then
+			info_queue[#info_queue+1] = G.P_CENTERS['m_glass']
+		end
         return { vars = { card.ability.extra.ability_loc_txt, card.ability.extra.x_mult } }
     end
 
@@ -1732,11 +1753,20 @@ if config.j_jank_self_portrait then
                 }))
                 return
             end
+		elseif not context.blueprint and context.individual and context.cardarea == G.play and not context.repetition and not context.repetition_only and not context.end_of_round then
+			if card.ability.extra.ability_state == 9 and SMODS.has_enhancement(context.other_card, "m_glass") then
+                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
+                return {
+					message = localize('k_upgrade_ex'),
+					card = card,
+					focus = card
+				}
+			end
         elseif context.setting_blind and not card.getting_sliced then
             if not context.blueprint and not card.getting_sliced then
-                card.ability.extra.ability_state = pseudorandom_element({ 1, 2, 3, 4, 5, 6, 7, 8 },
+                card.ability.extra.ability_state = pseudorandom_element({ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                     pseudoseed('self_insert'))
-                card.ability.extra.ability_loc_txt =  localize("self_portrait"..card.ability.extra.ability_state)
+                card.ability.extra.ability_loc_txt =  localize("self_portrait_"..card.ability.extra.ability_state)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'after',
                     delay = 0.4,
