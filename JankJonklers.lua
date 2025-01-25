@@ -1618,7 +1618,7 @@ if config.j_jank_sunday_funnies then
                                     return true
                                 end
                             }))
-                            card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                                 { message = localize('k_plus_tarot'), colour = G.C.PURPLE })
                             return true
                         end)
@@ -1637,7 +1637,7 @@ if config.j_jank_sunday_funnies then
                                     return true
                                 end
                             }))
-                            card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                                 { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
                             return true
                         end)
