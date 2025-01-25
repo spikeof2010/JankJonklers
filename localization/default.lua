@@ -19,7 +19,7 @@ return {
 			j_jank_self_portrait = {
 				name = "Self Portrait",
 				text = {
-					"This Joker gains {X:mult,C:white}X0.1{} Mult",
+					"This Joker gains {X:mult,C:white}X#3#{} Mult",
 					"whenever you {C:attention}#1#{}.",
 					"Changes every blind.",
 					"{C:inactive}(Currently {X:mult,C:white}X#2#{}{C:inactive} Mult){}",
@@ -225,7 +225,7 @@ return {
 			j_jank_midnight_crew = {
 				name = "Midnight Crew",
 				text = {
-					"This Joker gains {X:mult,C:white} X0.5 {} Mult",
+					"This Joker gains {X:mult,C:white} X#3# {} Mult",
 					"if scoring hand contains a",
 					"{C:attention}Flush of{} {V:1}#1#{}. Changes",
 					"suit after every blind",
@@ -297,6 +297,9 @@ return {
             self_portrait_7 = "play a Straight",
             self_portrait_8 = "play a Flush",
 			self_portrait_9 = "score a Glass card",
+		},
+		v_dictionary = {
+			k_jank_blind_reduction = "Blind -#1#%",
 		}
 	}
 }
