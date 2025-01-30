@@ -65,7 +65,7 @@ local function init_joker(joker, no_sprite)
 end
 
 local function get_suit(card)
-    if (card.ability.effect == 'Stone Card' or card.config.center.no_rank) and not card.vampired then
+    if (card.ability.effect == 'Stone Card' or card.config.center.no_suit) and not card.vampired then
         return -math.random(100, 100000)
     end
     return card.base.suit
@@ -98,30 +98,29 @@ if config.j_jank_fortuno then
 
     -- Calculate
     fortuno.calculate = function(self, card, context)
-        if context.before and context.cardarea == G.jokers and not context.blueprint and G.GAME.current_round.hands_played == 0 then
-            for k, v in ipairs(context.scoring_hand) do
-                if not (v:is_face() or v:get_id() == 14) then
-                    table.insert(card.ability.extra.trash_list, v)
-                    local card_to_destroy = v
-                    card_to_destroy.getting_sliced = true
-                    card_to_destroy:start_dissolve()
-                    ease_dollars(card.ability.extra.dollars)
-                end
-            end
-            return {
-                message = localize('$') .. card.ability.extra.dollars,
-                colour = G.C.MONEY,
-                delay = 0.45,
-                remove = true,
-                card = card
-            }
+        if context.destroying_card and context.destroying_card.area == G.play and not context.blueprint and G.GAME.current_round.hands_played == 0 then
+			if not (context.destroying_card:is_face() or context.destroying_card:get_id() == 14) then
+				return {
+					message = localize('$') .. card.ability.extra.dollars,
+					colour = G.C.MONEY,
+					delay = 0.45,
+					remove = true,
+					card = card,
+					extra = {
+						func = function()
+							ease_dollars(card.ability.extra.dollars)
+						end
+					},
+				}
+			end
+			--[[
         elseif context.end_of_round then
             if not context.blueprint and not context.repetition then
                 for i = 1, #card.ability.extra.trash_list do
                     card.ability.extra.trash_list[i]:start_dissolve(nil, true, 0, true)
                 end
                 card.ability.extra.trash_list = {}
-            end
+            end--]]
         end
     end
 
@@ -265,6 +264,7 @@ if config.j_jank_midnight_crew then
             extra = {
                 suit = "Spades",
                 x_mult = 1,
+				Xmult = 0.5,
             },
         },
         rarity = 4,
@@ -279,7 +279,7 @@ if config.j_jank_midnight_crew then
     
     -- Set local variables
     function midnight_crew.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.suit, card.ability.extra.x_mult, colours = { G.C.SUITS[card.ability.extra.suit] } } }
+        return { vars = { card.ability.extra.suit, card.ability.extra.x_mult, card.ability.extra.Xmult, colours = { G.C.SUITS[card.ability.extra.suit] } } }
     end
 
     -- Calculate
@@ -292,7 +292,7 @@ if config.j_jank_midnight_crew then
                 end
                 if isFlushSuit then
                     if not context.blueprint then
-                        card.ability.extra.x_mult = card.ability.extra.x_mult + 0.5
+                        card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
                     end
                     return {
                         message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
@@ -334,7 +334,7 @@ if config.j_jank_devilish then
         key = "devilish",
         config = {
             extra = {
-                x_mult = 3
+                Xmult = 3
             }
         },
         rarity = 2,
@@ -348,7 +348,7 @@ if config.j_jank_devilish then
     
     -- Set local variables
     function devilish.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult } }
+        return { vars = { card.ability.extra.Xmult } }
     end
 
     -- Calculate
@@ -362,8 +362,8 @@ if config.j_jank_devilish then
                 return nil
             end
             return {
-                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
-                Xmult_mod = card.ability.extra.x_mult
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
+                Xmult_mod = card.ability.extra.Xmult
             }
         end
     end
@@ -379,7 +379,7 @@ if config.j_jank_impractical then
         key = "impractical",
         config = {
             extra = {
-                x_mult = 3,
+                Xmult = 3,
                 poker_hand = "High Card",
             }
         },
@@ -394,7 +394,7 @@ if config.j_jank_impractical then
     
     -- Set local variables
     function impractical.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.poker_hand, card.ability.extra.x_mult } }
+        return { vars = { card.ability.extra.poker_hand, card.ability.extra.Xmult } }
     end
 
     -- Calculate
@@ -405,15 +405,15 @@ if config.j_jank_impractical then
                     func = function()
                         local _poker_hands = {}
                         for k, v in pairs(G.GAME.hands) do
-                            if v.visible and k ~= card.ability.to_do_poker_hand then _poker_hands[#_poker_hands + 1] = k end
+                            if v.visible and k ~= card.ability.extra.poker_hand then _poker_hands[#_poker_hands + 1] = k end
                         end
-                        card.ability.extra.poker_hand = pseudorandom_element(_poker_hands, pseudoseed('to_do'))
+                        card.ability.extra.poker_hand = localize(pseudorandom_element(_poker_hands, pseudoseed('impractical')), 'poker_hands')
                         return true
                     end
                 }))
                 return {
-                    message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
-                    Xmult_mod = card.ability.extra.x_mult
+                    message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
+                    Xmult_mod = card.ability.extra.Xmult
                 }
             end
         end
@@ -430,7 +430,7 @@ if config.j_jank_wanted_poster then
         key = "wanted_poster",
         config = {
             extra = {
-                dollars = 10,
+                money = 10,
                 penalty = 2,
             }
         },
@@ -445,7 +445,7 @@ if config.j_jank_wanted_poster then
     
     -- Set local variables
     function wanted_poster.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.dollars, card.ability.extra.penalty } }
+        return { vars = { card.ability.extra.money, card.ability.extra.penalty } }
     end
 
     -- Calculate
@@ -468,7 +468,7 @@ if config.j_jank_wanted_poster then
 
     wanted_poster.calc_dollar_bonus = function(self, card)
 		if G.GAME.current_round.hands_played == 1 then
-            return card.ability.extra.dollars
+            return card.ability.extra.money
         end
 	end
 
@@ -483,7 +483,8 @@ if config.j_jank_sentai then
         key = "sentai",
         config = {
             extra = {
-                mult = 8
+                mult = 8,
+				curr_mult = 0
             }
         },
         rarity = 1,
@@ -497,30 +498,29 @@ if config.j_jank_sentai then
     
     -- Set local variables
     function sentai.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.mult, card.ability.extra.mult } }
+        return { vars = { card.ability.extra.curr_mult, card.ability.extra.mult } }
     end
 
     -- Calculate
     sentai.calculate = function(self, card, context)
-        if context.joker_main and context.cardarea == G.jokers and card.ability.mult > 0 then
+        if context.joker_main and context.cardarea == G.jokers and card.ability.extra.curr_mult > 0 then
             return {
-                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } },
-                mult_mod = card.ability.mult + card.ability.extra.mult
+                mult = card.ability.extra.curr_mult
             }
         elseif context.using_consumeable then
             if not context.blueprint and context.consumeable.ability.set == 'Planet' then
-                card.ability.mult = card.ability.mult + card.ability.extra.mult
+                card.ability.extra.curr_mult = card.ability.extra.curr_mult + card.ability.extra.mult
                 G.E_MANAGER:add_event(Event({
                     func = function()
                         card_eval_status_text(card, 'extra', nil, nil, nil,
-                            { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.mult } } }); return true
+                            { message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.curr_mult } } }); return true
                     end
                 }))
                 return
             end
         elseif context.end_of_round and not context.blueprint then
-            if G.GAME.blind.boss and card.ability.mult > 1 then
-                card.ability.mult = 0
+            if G.GAME.blind.boss and card.ability.extra.curr_mult > 1 then
+                card.ability.extra.curr_mult = 0
                 return {
                     message = localize('k_reset'),
                     colour = G.C.RED
@@ -643,7 +643,7 @@ if config.j_jank_ternary_system then
     
     -- Set local variables
     function ternary_system.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.poker_hand } }
+        return { vars = { localize(card.ability.extra.poker_hand, 'poker_hands') } }
     end
 
     -- Calculate
@@ -733,7 +733,7 @@ if config.j_jank_devoted then
         config = {
             extra = {
                 x_mult = 1,
-                x_mult_gain = 0.5
+                Xmult = 0.5
             }
         },
         rarity = 3,
@@ -747,7 +747,7 @@ if config.j_jank_devoted then
     
     -- Set local variables
     function devoted.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain } }
+        return { vars = { card.ability.extra.x_mult, card.ability.extra.Xmult } }
     end
 
     -- Calculate
@@ -762,7 +762,7 @@ if config.j_jank_devoted then
         elseif context.setting_blind and not card.getting_sliced then
             if not context.blueprint and context.blind.boss and not card.getting_sliced then
                 ease_dollars(-G.GAME.dollars, true)
-                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
                 return {
                     message = localize('k_upgrade_ex'),
                     colour = G.C.RED
@@ -783,7 +783,7 @@ if config.j_jank_pawn then
         config = {
             extra = {
                 odds = 2,
-                dollars = 3
+                money = 3
             }
         },
         rarity = 1,
@@ -797,16 +797,16 @@ if config.j_jank_pawn then
     
     -- Set local variables
     function pawn.loc_vars(self, info_queue, card)
-        return { vars = { G.GAME.probabilities.normal, card.ability.extra.odds, card.ability.extra.dollars } }
+        return { vars = { G.GAME.probabilities.normal, card.ability.extra.odds, card.ability.extra.money } }
     end
 
     -- Calculate
     pawn.calculate = function(self, card, context)
         if context.selling_card then
             if pseudorandom('pawn_broker') < G.GAME.probabilities.normal / card.ability.extra.odds then
-                ease_dollars(card.ability.extra.dollars)
+                ease_dollars(card.ability.extra.money)
                 return {
-                    message = localize('$') .. card.ability.extra.dollars,
+                    message = localize('$') .. card.ability.extra.money,
                     colour = G.C.MONEY,
                     delay = 0.45,
                     card = card
@@ -1148,17 +1148,37 @@ if config.j_jank_cut_the_cheese then
     -- Calculate
     cut_the_cheese.calculate = function(self, card, context)
         if context.setting_blind then
-            if not (context.blueprint_card or self).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
+            if not (context.blueprint_card or card).getting_sliced and #G.jokers.cards + G.GAME.joker_buffer < G.jokers.config.card_limit then
                 local jokers_to_create = math.min(1, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))
-                local food_list = {
+                local base_food_list = {
                     "j_popcorn",
                     "j_gros_michel",
                     "j_ice_cream",
                     "j_turtle_bean",
                     "j_ramen",
                     "j_selzer",
-                    "j_diet_cola"
+                    "j_diet_cola",
+					-- "j_egg",
                 }
+				if (SMODS.Mods['ortalab'] or {}).can_load then
+					table.insert(base_food_list, "j_ortalab_fine_wine")
+					table.insert(base_food_list, "j_ortalab_hot_chocolate")
+					table.insert(base_food_list, "j_ortalab_mystery_soda")
+					table.insert(base_food_list, "j_ortalab_popcorn_bag") -- this is Picnic Basket 
+					table.insert(base_food_list, "j_ortalab_salad")
+					table.insert(base_food_list, "j_ortalab_taliaferro")
+					--table.insert(base_food_list, "j_ortalab_sunnyside") -- if egg doesnt count this doesnt count either
+				end
+				if (SMODS.Mods['pokermon'] or {}).can_load then
+					table.insert(base_food_list, "j_poke_jelly_donut")
+				end
+				local food_list = {}
+				for _,k in ipairs(base_food_list) do
+					if not (next(find_joker(G.P_CENTERS[k].name))) then
+						table.insert(food_list, k)
+					end
+				end
+				if #food_list == 0 then food_list = {"j_gros_michel"} end
                 G.GAME.joker_buffer = G.GAME.joker_buffer + jokers_to_create
                 G.E_MANAGER:add_event(Event({
                     func = function()
@@ -1170,7 +1190,7 @@ if config.j_jank_cut_the_cheese then
                         return true
                     end
                 }))
-                card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                     { message = localize('k_plus_joker'), colour = G.C.BLUE })
             end
         end
@@ -1254,14 +1274,16 @@ if config.j_jank_suspicious_vase then
                     return nil
                 end
                 context.other_card:set_ability(G.P_CENTERS.m_glass, nil, true)
+				local other_card = context.other_card
                 G.E_MANAGER:add_event(Event({
                     func = function()
-                        context.other_card:juice_up()
+                        other_card:juice_up()
                         return true
                     end
                 }))
                 return {
-                    x_mult = card.ability.extra.x_mult,
+                    Xmult_mod = card.ability.extra.x_mult,
+                    message = localize{type='variable',key='a_xmult',vars={self.ability.extra.x_mult}},
                     card = card
                 }
             end
@@ -1336,8 +1358,8 @@ if config.j_jank_chicken_scratch then
         key = "chicken_scratch",
         config = {
             extra = {
-                chips = 0,
-                chips_gain = 5
+                curr_chips = 0,
+                chips = 5
             }
         },
         rarity = 1,
@@ -1351,34 +1373,39 @@ if config.j_jank_chicken_scratch then
     
     -- Set local variables
     function chicken_scratch.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.chips, card.ability.extra.chips_gain } }
+        return { vars = { card.ability.extra.curr_chips, card.ability.extra.chips } }
     end
 
     -- Calculate
     chicken_scratch.calculate = function(self, card, context)
-        if context.joker_main and context.cardarea == G.jokers then
+		if context.before then
             local chickenfood = false
             for k, v in ipairs(context.scoring_hand) do
                 if (v:get_id() == 8 or v:get_id() == 7 or v:get_id() == 3) then
                     chickenfood = true
                 end
             end
-            if not chickenfood then
+			if chickenfood then
+				card.ability.extra.curr_chips = card.ability.extra.curr_chips + card.ability.extra.chips
+				return {
+					message = localize('k_upgrade_ex'),
+					colour = G.C.CHIPS,
+					card = card,
+					focus = card
+				}
+			end
+		end
+        if context.joker_main and context.cardarea == G.jokers then
+            if card.ability.extra.curr_chips > 0 then
                 return {
-                    message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } },
-                    chip_mod = card.ability.extra.chips,
+                    message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.curr_chips } },
+                    chip_mod = card.ability.extra.curr_chips,
                     colour = G.C.CHIPS
                 }
             end
-            card.ability.extra.chips = card.ability.extra.chips + card.ability.extra.chips_gain
-            G.E_MANAGER:add_event(Event({
-                func = function()
-                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                end
-            }))
             return {
-                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } },
-                chip_mod = card.ability.extra.chips,
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.curr_chips } },
+                chip_mod = card.ability.extra.curr_chips,
                 colour = G.C.CHIPS
             }
         end
@@ -1395,8 +1422,8 @@ if config.j_jank_chalk_outline then
         key = "chalk_outline",
         config = {
             extra = {
-                mult = 0,
-                mult_gain = 6
+                curr_mult = 0,
+                mult = 6
             }
         },
         rarity = 1,
@@ -1410,23 +1437,26 @@ if config.j_jank_chalk_outline then
     
     -- Set local variables
     function chalk_outline.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.mult, card.ability.extra.mult_gain } }
+        return { vars = { card.ability.extra.curr_mult, card.ability.extra.mult } }
     end
 
     -- Calculate
     chalk_outline.calculate = function(self, card, context)
-        if context.joker_main and context.cardarea == G.jokers then
+		if context.before then
             if G.GAME.current_round.hands_left == 0 then
-                card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
+                card.ability.extra.curr_mult = card.ability.extra.curr_mult + card.ability.extra.mult
+				return {
+					message = localize('k_upgrade_ex'),
+					colour = G.C.MULT,
+					card = card,
+					focus = card,
+				}
             end
+		end
+        if context.joker_main and context.cardarea == G.jokers and card.ability.extra.curr_mult > 0 then
             return {
-                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } },
-                mult_mod = card.ability.extra.mult
+                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.curr_mult } },
+                mult_mod = card.ability.extra.curr_mult
             }
         end
     end
@@ -1463,25 +1493,33 @@ if config.j_jank_boredom_slayer then
     -- Calculate
     boredom_slayer.calculate = function(self, card, context)
         if context.joker_main and context.cardarea == G.jokers then
-            G.E_MANAGER:add_event(Event({
-                trigger = 'after',
-                delay = 0.1,
-                func = function()
-                    local chips = G.GAME.blind.chips * 0.9
-                    if type(chips) == 'table' then chips:floor() else chips = math.floor(chips) end
+            return {
+                message = localize { type = 'variable', key = 'k_jank_blind_reduction', vars = { (1 - card.ability.extra.reduction) * 100 } },
+				card = card,
+				focus = card,
+				colour = G.C.ORANGE,
+				func = function()
+					G.E_MANAGER:add_event(Event({
+						trigger = 'immediate',
+						delay = 0.0,
+						func = (function()
+							local chips = G.GAME.blind.chips * 0.9
+							if type(chips) == 'table' then chips:floor() else chips = math.floor(chips) end
 
-                    G.GAME.blind.chips = math.floor(G.GAME.blind.chips * 0.9)
-                    G.GAME.blind.chip_text = number_format(G.GAME.blind.chips)
+							G.GAME.blind.chips = math.floor(G.GAME.blind.chips * 0.9)
+							G.GAME.blind.chip_text = number_format(G.GAME.blind.chips)
 
-                    local chips_UI = G.hand_text_area.blind_chips
-                    G.FUNCS.blind_chip_UI_scale(G.hand_text_area.blind_chips)
-                    G.HUD_blind:recalculate()
-                    chips_UI:juice_up()
+							local chips_UI = G.hand_text_area.blind_chips
+							G.FUNCS.blind_chip_UI_scale(G.hand_text_area.blind_chips)
+							G.HUD_blind:recalculate()
+							chips_UI:juice_up()
 
-                    if not silent then play_sound('chips2') end
-                    return true
-                end
-            }))
+							if not silent then play_sound('chips2') end
+							return true
+						end)}))
+					return true
+				end,
+            }
         end
     end
 
@@ -1526,10 +1564,9 @@ if config.j_jank_cardslinger then
         end
         if context.joker_main and context.cardarea == G.jokers then
             card.ability.extra.clear_cache = true
-            card.ability.extra.chips = 10 * card.ability.extra.trigger_count
             return {
-                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips } },
-                chip_mod = card.ability.extra.chips,
+                message = localize { type = 'variable', key = 'a_chips', vars = { card.ability.extra.chips * card.ability.extra.trigger_count } },
+                chip_mod = card.ability.extra.chips * card.ability.extra.trigger_count,
                 colour = G.C.CHIPS
             }
         end
@@ -1581,7 +1618,7 @@ if config.j_jank_sunday_funnies then
                                     return true
                                 end
                             }))
-                            card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                                 { message = localize('k_plus_tarot'), colour = G.C.PURPLE })
                             return true
                         end)
@@ -1600,7 +1637,7 @@ if config.j_jank_sunday_funnies then
                                     return true
                                 end
                             }))
-                            card_eval_status_text(context.blueprint_card or self, 'extra', nil, nil, nil,
+                            card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil,
                                 { message = localize('k_plus_planet'), colour = G.C.SECONDARY_SET.Planet })
                             return true
                         end)
@@ -1635,7 +1672,8 @@ if config.j_jank_self_portrait then
             extra = {
                 ability_loc_txt =  "use a Tarot card",
                 ability_state = 1,
-                x_mult = 1
+                x_mult = 1,
+				Xmult = 0.1,
             }
         },
         rarity = 3,
@@ -1649,7 +1687,10 @@ if config.j_jank_self_portrait then
     
     -- Set local variables
     function self_portrait.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.ability_loc_txt, card.ability.extra.x_mult } }
+		if card.ability.extra.ability_state == 9 then
+			info_queue[#info_queue+1] = G.P_CENTERS['m_glass']
+		end
+        return { vars = { card.ability.extra.ability_loc_txt, card.ability.extra.x_mult, card.ability.extra.Xmult } }
     end
 
     -- Calculate
@@ -1661,83 +1702,76 @@ if config.j_jank_self_portrait then
             }
         elseif context.using_consumeable then
             if not context.blueprint and context.consumeable.ability.set == 'Tarot' and card.ability.extra.ability_state == 1 then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             elseif not context.blueprint and context.consumeable.ability.set == 'Planet' and card.ability.extra.ability_state == 2 then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             end
         elseif not context.blueprint and context.cards_destroyed and card.ability.extra.ability_state == 3 then
-            card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-            G.E_MANAGER:add_event(Event({
-                func = function()
-                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                end
-            }))
-            return
-        elseif not context.blueprint and context.cardarea == G.jokers and card.ability.extra.ability_state == 4 and context.full_hand and #context.full_hand <= 3 then
-            card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-            G.E_MANAGER:add_event(Event({
-                func = function()
-                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                end
-            }))
-            return
+            card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+            return {
+				message = localize('k_upgrade_ex'),
+				card = card, focus = card,
+			}
+        elseif not context.blueprint and context.cardarea == G.jokers and card.ability.extra.ability_state == 4 and context.before and context.full_hand and #context.full_hand <= 3 then
+            card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+            return {
+				message = localize('k_upgrade_ex'),
+				card = card, focus = card,
+			}
         elseif not context.blueprint and context.discard and card.ability.extra.ability_state == 5 then
             local face_cards = 0
             for k, v in ipairs(context.full_hand) do
                 if v:is_face() then face_cards = face_cards + 1 end
             end
             if face_cards >= 3 then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             end
         elseif not context.blueprint and context.cardarea == G.jokers and context.before then
             if card.ability.extra.ability_state == 6 and next(context.poker_hands['High Card']) then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             elseif card.ability.extra.ability_state == 7 and next(context.poker_hands['Straight']) then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             elseif card.ability.extra.ability_state == 8 and next(context.poker_hands['Flush']) then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + 0.1
-                G.E_MANAGER:add_event(Event({
-                    func = function()
-                        card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                    end
-                }))
-                return
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+				return {
+					message = localize('k_upgrade_ex'),
+					card = card, focus = card,
+				}
             end
+		elseif not context.blueprint and context.individual and context.cardarea == G.play and not context.repetition and not context.repetition_only and not context.end_of_round then
+			if card.ability.extra.ability_state == 9 and SMODS.has_enhancement(context.other_card, "m_glass") then
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+                return {
+					message = localize('k_upgrade_ex'),
+					card = card,
+					focus = card
+				}
+			end
         elseif context.setting_blind and not card.getting_sliced then
             if not context.blueprint and not card.getting_sliced then
-                card.ability.extra.ability_state = pseudorandom_element({ 1, 2, 3, 4, 5, 6, 7, 8 },
+                card.ability.extra.ability_state = pseudorandom_element({ 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                     pseudoseed('self_insert'))
-                card.ability.extra.ability_loc_txt =  localize("self_portrait"..card.ability.extra.ability_state)
+                card.ability.extra.ability_loc_txt =  localize("self_portrait_"..card.ability.extra.ability_state)
                 G.E_MANAGER:add_event(Event({
                     trigger = 'after',
                     delay = 0.4,
@@ -1764,7 +1798,7 @@ if config.j_jank_memorable then
         config = {
             extra = {
                 x_mult = 1,
-                x_mult_gain = 0.1,
+                Xmult = 0.1,
             }
         },
         rarity = 2,
@@ -1778,24 +1812,26 @@ if config.j_jank_memorable then
     
     -- Set local variables
     function memorable.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult, card.ability.extra.x_mult_gain } }
+        return { vars = { card.ability.extra.x_mult, card.ability.extra.Xmult } }
     end
 
     -- Calculate
     memorable.calculate = function(self, card, context)
-        if context.joker_main and context.cardarea == G.jokers then
-            if context.full_hand and #context.full_hand == 3 then
-                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.x_mult_gain
-                return {
-                    message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
-                    Xmult_mod = card.ability.extra.x_mult
-                }
-            end
+		if context.before and context.full_hand and #context.full_hand ~= 3 then
             card.ability.extra.x_mult = 1
             return {
                 message = localize('k_reset'),
                 colour = G.C.RED
             }
+		end
+        if context.joker_main and context.cardarea == G.jokers then
+            if context.full_hand and #context.full_hand == 3 then
+                card.ability.extra.x_mult = card.ability.extra.x_mult + card.ability.extra.Xmult
+            end
+			return {
+				message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
+				Xmult_mod = card.ability.extra.x_mult
+			}
         end
     end
 
@@ -1810,8 +1846,8 @@ if config.j_jank_tapestry then
         key = "tapestry",
         config = {
             extra = {
-                mult = 0,
-                mult_gain = 4,
+                curr_mult = 0,
+                mult = 4,
                 tapestry_list = {},
             }
         },
@@ -1826,7 +1862,7 @@ if config.j_jank_tapestry then
     
     -- Set local variables
     function tapestry.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.mult, card.ability.extra.mult_gain } }
+        return { vars = { card.ability.extra.curr_mult, card.ability.extra.mult } }
     end
 
     -- Calculate
@@ -1842,19 +1878,19 @@ if config.j_jank_tapestry then
                     return nil
                 end
             end
-            card.ability.extra.mult = card.ability.extra.mult + card.ability.extra.mult_gain
-            G.E_MANAGER:add_event(Event({
-                func = function()
-                    card_eval_status_text(card, 'extra', nil, nil, nil, { message = localize('k_upgrade_ex') }); return true
-                end
-            }))
-            return
-                table.insert(tapestry_list, result)
-        end
-        if context.joker_main and context.cardarea == G.jokers and card.ability.extra.mult > 0 then
+            card.ability.extra.curr_mult = card.ability.extra.curr_mult + card.ability.extra.mult
+			table.insert(tapestry_list, result)
             return {
-                message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.mult } },
-                mult = card.ability.extra.mult
+				message = localize('k_upgrade_ex'),
+				colour = G.C.MULT,
+				card = card,
+				focus = card,
+			}
+        end
+        if context.joker_main and context.cardarea == G.jokers and card.ability.extra.curr_mult > 0 then
+            return {
+                --message = localize { type = 'variable', key = 'a_mult', vars = { card.ability.extra.curr_mult } },
+                mult = card.ability.extra.curr_mult
             }
         end
     end
@@ -1870,7 +1906,7 @@ if config.j_jank_sir then
         key = "sir",
         config = {
             extra = {
-                x_mult = 1.5
+                Xmult = 1.5
             }
         },
         rarity = 1,
@@ -1884,15 +1920,15 @@ if config.j_jank_sir then
     
     -- Set local variables
     function sir.loc_vars(self, info_queue, card)
-        return { vars = { card.ability.extra.x_mult } }
+        return { vars = { card.ability.extra.Xmult } }
     end
 
     -- Calculate
     sir.calculate = function(self, card, context)
         if context.joker_main and context.cardarea == G.jokers and (G.GAME.current_round.hands_left == 0 or G.GAME.blind.boss) then
             return {
-                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.x_mult } },
-                Xmult_mod = card.ability.extra.x_mult
+                message = localize { type = 'variable', key = 'a_xmult', vars = { card.ability.extra.Xmult } },
+                Xmult_mod = card.ability.extra.Xmult
             }
         end
     end
