@@ -1283,7 +1283,7 @@ if config.j_jank_suspicious_vase then
                 }))
                 return {
                     Xmult_mod = card.ability.extra.x_mult,
-                    message = localize{type='variable',key='a_xmult',vars={self.ability.extra.x_mult}},
+                    message = localize{type='variable',key='a_xmult',vars={card.ability.extra.x_mult}},
                     card = card
                 }
             end
